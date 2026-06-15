@@ -61,16 +61,16 @@ $l$ from the COM.  Following the convention of
         = \frac{l}{\sqrt{2}}\!\left(\hat{x}^b - \hat{y}^b\right).
     \label{eq:prop_locs}
 \end{equation}
-Each propeller $i$ produces a thrust $f_i \geq 0$ directed along
-$+\hat{z}^b$ and an aerodynamic reaction torque $c\,f_i$ about $\hat{z}^b$,
-where $c > 0$ is the common thrust-to-drag ratio (identical for all four
-rotors since they share the same spinning direction).  Consequently the
-total yaw torque is
+Each propeller $i$ produces a propulsive thrust $f_{i,p} \geq 0$ directed
+along $+\hat{z}^b$ and an aerodynamic reaction torque $c\,f_{i,p}$ about
+$\hat{z}^b$, where $c > 0$ is the common thrust-to-drag ratio (identical
+for all four rotors since they share the same spinning direction).
+Consequently the total yaw torque is
 \begin{equation}
-    \tau_z = c\sum_{i=1}^{4} f_i = c\,F,
+    \tau_z = c\sum_{i=1}^{4} f_{i,p} = c\,F,
     \label{eq:yaw_torque}
 \end{equation}
-where $F = \sum_i f_i$ is the total thrust.  Equation~\eqref{eq:yaw_torque}
+where $F = \sum_i f_{i,p}$ is the total thrust.  Equation~\eqref{eq:yaw_torque}
 shows that the yaw torque is always coupled to the total thrust and cannot
 be nullified independently---the defining characteristic of the relaxed-hover
 regime.
@@ -92,11 +92,118 @@ $h$ and $v$ denote horizontal and vertical components
 respectively~\cite{bai2022splitflyerair}.  The vehicle mass is $m = 70\;\mathrm{g}$;
 remaining hardware parameters are specified in Chapter~\ref{chapter:paperone}.
 
+\paragraph{Propeller aerodynamic model.}
+Each propeller $i$ spins about its own thrust axis at blade speed $\Omega_i$,
+which is distinct from and substantially larger than the vehicle yaw rate
+$\omega_z$.  The propulsive thrust follows the standard aerodynamic model
+\begin{equation}
+    f_{i,p} = k_f\,\Omega_i^2,
+    \label{eq:thrust_model}
+\end{equation}
+where $k_f > 0$ is a propeller constant.  Section~\ref{sec:attitude_dynamics}
+introduces an additional aerodynamic effect absent from conventional
+multirotor models: an advancing/retreating blade moment arising because each
+propeller disk sweeps through the air as the vehicle yaws.  That analysis
+introduces the blade flap coefficient $k_{AB}$, parameterised by the blade
+chord $c_b$, the two-dimensional lift curve slope $a_0$, and the tip radius
+$r_{\mathrm{tip}} = 50\;\mathrm{mm}$.
+
 \section{Translational Dynamics}
+\label{sec:translational_dynamics}
+
+The translational dynamics follow directly from the framework of
+\textcite{bai2022splitflyerair} and are unchanged by the all-same-direction
+propeller configuration.  Treating the vehicle as a rigid body of mass $m$,
+Newton's second law gives
+\begin{equation}
+    m\ddot{\boldsymbol{p}} = \boldsymbol{R}\sum_{i=1}^{4}\boldsymbol{f}_i
+        - mg\hat{e}_3,
+    \label{eq:trans_eom}
+\end{equation}
+where the total force from propeller $i$ is
+\begin{equation}
+    \boldsymbol{f}_i = \hat{e}_3 f_{i,p} + \boldsymbol{f}_{i,d}.
+    \label{eq:prop_force}
+\end{equation}
+The propulsive thrust $f_{i,p}$ is directed along the body $\hat{z}^b$ axis.
+The rotor-induced drag $\boldsymbol{f}_{i,d}$, modelled as a linear function
+of the air velocity at the propeller disk~\cite{bai2022splitflyerair}, is
+\begin{equation}
+    \boldsymbol{f}_{i,d} = -\boldsymbol{B}
+        \!\left(\boldsymbol{R}^{-1}\dot{\boldsymbol{p}}
+        + \boldsymbol{\omega}\times\boldsymbol{l}_i\right),
+    \label{eq:rotor_drag}
+\end{equation}
+where the first term accounts for the translational velocity of the vehicle
+and the second for the velocity of the propeller hub due to body rotation.
+
+\paragraph{Cancellation of rotation-induced drag.}
+The symmetry of the X-configuration---$\boldsymbol{l}_1 + \boldsymbol{l}_2
++ \boldsymbol{l}_3 + \boldsymbol{l}_4 = \mathbf{0}$, which follows
+immediately from~\eqref{eq:prop_locs}---ensures that the rotation-induced
+drag terms cancel when summed:
+\begin{equation}
+    \sum_{i=1}^{4}\left(\boldsymbol{\omega}\times\boldsymbol{l}_i\right)
+        = \boldsymbol{\omega}\times\sum_{i=1}^{4}\boldsymbol{l}_i
+        = \mathbf{0}.
+    \label{eq:drag_cancel}
+\end{equation}
+This cancellation holds regardless of propeller spin direction and therefore
+applies equally to our vehicle.  Substituting into~\eqref{eq:trans_eom}:
+\begin{equation}
+    m\ddot{\boldsymbol{p}}
+        = \boldsymbol{R}\hat{e}_3 F
+          - 4\boldsymbol{R}\boldsymbol{B}\boldsymbol{R}^{-1}\dot{\boldsymbol{p}}
+          - mg\hat{e}_3.
+    \label{eq:trans_full}
+\end{equation}
+The second term is a translational damping force present in all multirotor
+vehicles.  For non-aggressive near-hover flight it is small relative to
+gravity and is neglected in what follows~\cite{bai2022splitflyerair}, yielding
+\begin{equation}
+    m\ddot{\boldsymbol{p}} \approx \boldsymbol{R}\hat{e}_3 F - mg\hat{e}_3.
+    \label{eq:trans_hover}
+\end{equation}
+
+\paragraph{Note on the advancing/retreating blade effect.}
+The advancing/retreating blade moment derived in
+Section~\ref{sec:attitude_dynamics} acts as a pure torque at each propeller
+hub.  For a rigid fixed-pitch rotor the thrust vector remains aligned with
+$\hat{z}^b$ regardless of in-plane flow, so the flapping moment produces no
+net force on the vehicle and does not appear in~\eqref{eq:trans_eom}.  The
+translational dynamics~\eqref{eq:trans_hover} are therefore unaffected.
+
+\paragraph{Near-hover linearisation.}
+For small inclinations $|\alpha_x|,|\alpha_y|\ll 1$, the body $\hat{z}^b$
+axis expressed in the inertial frame is approximately
+\begin{equation}
+    \boldsymbol{R}\hat{e}_3 \approx
+        \begin{bmatrix} J\boldsymbol{\eta} \\ 1 \end{bmatrix},
+    \qquad
+    J = \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix},
+    \label{eq:zb_approx}
+\end{equation}
+where $J$ is the $-90^{\circ}$ rotation matrix in the horizontal plane.
+Splitting~\eqref{eq:trans_hover} into horizontal and vertical components
+and using the hover thrust condition $F\approx mg$ for the horizontal term
+gives
+\begin{align}
+    m\ddot{\boldsymbol{p}}_2 &= mg\,J\boldsymbol{\eta},
+    \label{eq:horiz_dyn}\\
+    m\ddot{z} &= F - mg,
+    \label{eq:vert_dyn}
+\end{align}
+where $\boldsymbol{p}_2 = [x,\,y]^{\top}$ is the horizontal position.
+Equation~\eqref{eq:horiz_dyn} shows that horizontal acceleration is driven
+solely by the vehicle tilt $\boldsymbol{\eta}$---the same result as for a
+conventional quadrotor or the SplitFlyer bicopter---and forms the basis of
+the position controller in Section~\ref{sec:controller}.
 
 \section{Attitude Dynamics}
+\label{sec:attitude_dynamics}
 
 \section{Reduced Dynamics under High Yaw Rate}
 \label{sec:reduced_dynamics}
 
 \section{Controller Design}
+\label{sec:controller}
