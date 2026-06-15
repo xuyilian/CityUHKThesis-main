@@ -2,11 +2,101 @@
 \label{chapter:papertwo}
 
 \section{Coordinate Frames and System Definition}
+\label{sec:coord_frames}
+
+The flight dynamics and control framework presented in this chapter follows
+the formulation of \textcite{bai2020splitflyer,bai2022splitflyerair} for
+rotating underactuated rotorcraft, adapted to the present vehicle.  The
+critical design feature distinguishing this quadrotor from a conventional
+multirotor is that \emph{all four propellers spin in the same direction}.
+The individual aerodynamic yaw torques therefore do not cancel, and the
+vehicle sustains a non-zero net yaw torque during flight.  At equilibrium
+this drives the vehicle to a constant spinning yaw rate---the
+\emph{relaxed hovering condition}~\cite{mueller2016relaxed,bai2020splitflyer}---which
+fundamentally shapes the dynamics and motivates the gyroscopic analysis that
+follows.
+
+\paragraph{Inertial and body frames.}
+The right-handed inertial frame $(\hat{x}^w, \hat{y}^w, \hat{z}^w)$ is
+fixed to the ground with $\hat{z}^w$ pointing vertically upward.  The
+position of the vehicle's centre of mass (COM) in this frame is
+$\boldsymbol{p} = [x,\,y,\,z]^{\top}$.  The right-handed body frame
+$(\hat{x}^b, \hat{y}^b, \hat{z}^b)$ is rigidly attached to the vehicle with
+its origin at the COM; the $\hat{z}^b$ axis is aligned with the common
+thrust axis of the four propellers.  The rotation matrix
+$\boldsymbol{R}\in SO(3)$ maps body-frame vectors to the inertial frame,
+so the world-frame direction of the thrust axis is $\boldsymbol{R}\hat{e}_3$,
+where $\hat{e}_3 = [0,0,1]^{\top}$.  The body angular velocity expressed in
+the body frame is $\boldsymbol{\omega} = [\omega_x, \omega_y, \omega_z]^{\top}$.
+The yaw angle $\psi$ is defined as the rotation of $\hat{x}^b$ about
+$\hat{z}^w$ relative to $\hat{x}^w$.
+
+\paragraph{Non-revolving frame.}
+Because the vehicle spins at high yaw rate, a non-revolving intermediate
+frame $(\hat{x}^m, \hat{y}^m, \hat{z}^b)$ is introduced to describe the
+attitude of the spinning disk independently of the instantaneous yaw
+angle~\cite{bai2022splitflyerair}.  Under the small-inclination assumption
+$|\alpha_x|, |\alpha_y| \ll 1$, the reduced attitude state
+$\boldsymbol{\eta} = [\alpha_x, \alpha_y]^{\top}$ parametrises the deviation
+of $\hat{z}^b$ from vertical, and the non-revolving axes are approximated as
+\begin{equation}
+    \hat{x}^m \approx [1,\;0,\;{-\alpha_y}]^{\top},
+    \qquad
+    \hat{y}^m \approx [0,\;1,\;\alpha_x]^{\top}.
+    \label{eq:nm_frame}
+\end{equation}
+The pair $(\hat{x}^m, \hat{y}^m)$ spans the horizontal plane for any yaw
+angle $\psi$; this frame is the natural setting for the gyroscopic reduced
+attitude dynamics derived in Section~\ref{sec:reduced_dynamics}.
+
+\paragraph{Propeller geometry.}
+The four propellers are arranged in an X-configuration at equal arm length
+$l$ from the COM.  Following the convention of
+\textcite{bai2022splitflyerair}, their body-frame position vectors are
+\begin{equation}
+    \boldsymbol{l}_1 = -\boldsymbol{l}_3
+        = \frac{l}{\sqrt{2}}\!\left(\hat{x}^b + \hat{y}^b\right),
+    \qquad
+    \boldsymbol{l}_2 = -\boldsymbol{l}_4
+        = \frac{l}{\sqrt{2}}\!\left(\hat{x}^b - \hat{y}^b\right).
+    \label{eq:prop_locs}
+\end{equation}
+Each propeller $i$ produces a thrust $f_i \geq 0$ directed along
+$+\hat{z}^b$ and an aerodynamic reaction torque $c\,f_i$ about $\hat{z}^b$,
+where $c > 0$ is the common thrust-to-drag ratio (identical for all four
+rotors since they share the same spinning direction).  Consequently the
+total yaw torque is
+\begin{equation}
+    \tau_z = c\sum_{i=1}^{4} f_i = c\,F,
+    \label{eq:yaw_torque}
+\end{equation}
+where $F = \sum_i f_i$ is the total thrust.  Equation~\eqref{eq:yaw_torque}
+shows that the yaw torque is always coupled to the total thrust and cannot
+be nullified independently---the defining characteristic of the relaxed-hover
+regime.
+
+\paragraph{Inertia and drag.}
+By design, mass is distributed symmetrically about the $\hat{z}^b$ axis so
+that the moments of inertia about roll and pitch are approximately equal,
+$I_x \approx I_y \equiv I_d$.  The full inertia tensor is therefore
+\begin{equation}
+    \boldsymbol{I} = \mathrm{diag}(I_d,\;I_d,\;I_z),
+    \label{eq:inertia}
+\end{equation}
+which is the axisymmetric condition required to treat the vehicle as a
+gyroscope in Section~\ref{sec:reduced_dynamics}.  Rotor-induced drag is
+characterised by the coefficient matrix
+$\boldsymbol{B} = \mathrm{diag}(B_h, B_h, B_v)$, and aerodynamic body
+damping by $\boldsymbol{D} = \mathrm{diag}(D_h, D_h, D_v)$, where subscripts
+$h$ and $v$ denote horizontal and vertical components
+respectively~\cite{bai2022splitflyerair}.  The vehicle mass is $m = 70\;\mathrm{g}$;
+remaining hardware parameters are specified in Chapter~\ref{chapter:paperone}.
 
 \section{Translational Dynamics}
 
 \section{Attitude Dynamics}
 
 \section{Reduced Dynamics under High Yaw Rate}
+\label{sec:reduced_dynamics}
 
 \section{Controller Design}
