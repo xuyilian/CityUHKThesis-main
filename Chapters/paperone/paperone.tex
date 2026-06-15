@@ -2,7 +2,90 @@
 \label{chapter:paperone}
 
 \section{Design Requirements}
+\label{sec:design_requirements}
+
+The vehicle must satisfy two coupled sets of requirements: it must generate
+enough lift to hover as a quadrotor, and its spinning hydrofoils must produce
+sufficient hydrodynamic impulse during a brief water-surface contact to eject
+it back into the air.
+
+\paragraph{Flight requirements.}
+The target all-up mass is $m = 70\;\mathrm{g}$.  All four propellers spin in
+the same direction, so yaw torque cannot be independently cancelled; the
+vehicle instead reaches the relaxed-hover equilibrium spin rate
+$\omega_z^*$ derived in Chapter~\ref{chapter:papertwo}.  The design target
+spin rate is approximately $66\;\mathrm{rad\,s^{-1}}$, set by the interplay of
+propeller reaction torque and hydrofoil profile drag (equation~\eqref{eq:omegaz_hover}).
+The four rotors are driven from a single-cell (\SI{3.7}{V} nominal) lithium
+polymer battery, which constrains motor selection to high-KV, small-diameter
+units compatible with the propeller geometry.
+
+\paragraph{Water-skipping requirements.}
+For a successful hop the hydrofoils must, during the brief submersion phase,
+generate a net vertical impulse large enough to reverse the vehicle's downward
+velocity and return it to free flight.  Blade-element simulation of the
+submersion dynamics (described in Chapter~\ref{chapter:dynamic}) shows that
+both the hydrofoil inclination angle $\beta$ and the spin rate $\omega_z^*$
+at water contact are primary drivers of the ejection velocity; the design
+therefore cannot be finalised independently of the flight dynamics.  In
+addition, the foils must not generate so much profile drag during flight
+that $\omega_z^*$ falls outside the controllable regime of
+Chapter~\ref{chapter:papertwo}.
 
 \section{Overall Mechanical Design}
+\label{sec:mech_design}
+
+\paragraph{Frame and propulsion.}
+The frame is an X-configuration quadrotor with arm length $l =
+50\;\mathrm{mm}$ from the centre of mass to each motor mount.  Four
+\mbox{0802} motors rated at $22{,}000\;\mathrm{KV}$ are installed at the arm
+tips, all rotating in the same direction.  Each motor drives a two-blade
+propeller of $50\;\mathrm{mm}$ diameter.  The propeller tip circle therefore
+extends to $l + r_p = 50 + 25 = 75\;\mathrm{mm}$ from the vehicle centre.
+
+\paragraph{Electronics.}
+The flight controller is a Crazyflie\;2.x Brushless board, which integrates a
+six-axis IMU, a radio transceiver, and motor drivers on a single compact
+module.  Power is supplied by a $1\mathrm{S}$ ($3.7\;\mathrm{V}$)
+lithium polymer cell of capacity $550\;\mathrm{mAh}$, mounted centrally to
+minimise the shift of the centre of mass.  The complete vehicle has an all-up
+mass of $m = 70\;\mathrm{g}$.
+
+\paragraph{Hydrofoil mounting.}
+One hydrofoil is attached below each arm, with its span oriented along the
+arm axis.  The foil tip is at radius $r_\mathrm{tip} = 70\;\mathrm{mm}$ from
+the vehicle centre, placing it just inside the propeller tip circle and
+entirely beneath the propeller plane so that it does not interfere with the
+airflow during hovering flight.  This arrangement means the four-foil assembly
+spans from $r_\mathrm{root}$ to $r_\mathrm{tip}$ and rotates at the vehicle
+yaw rate $\omega_z$, acting collectively as a single large rotor disk of
+radius $r_\mathrm{tip}$ as described in Section~\ref{sec:attitude_dynamics}.
 
 \section{Hydrofoil Geometry Design}
+\label{sec:foil_design}
+
+\paragraph{Profile and planform.}
+Each hydrofoil is a thin flat plate, chosen for simplicity of fabrication and
+because the flat-plate aerodynamic model (lift coefficient $C_L = 2\sin\alpha
+\cos\alpha$, drag coefficient $C_D = 2\sin^2\alpha$) provides a closed-form
+basis for the blade-element simulation of Chapter~\ref{chapter:dynamic}.  The
+foil spans radially from $r_\mathrm{root}$ to $r_\mathrm{tip} =
+70\;\mathrm{mm}$, giving a span of $r_\mathrm{tip} - r_\mathrm{root}$
+determined by the chord length and the required planform area.  The chord
+length (dimension tangential to the sweep direction) of the fabricated foil is
+$c_f = 10\;\mathrm{mm}$; the resulting planform area per foil is
+$S_f = c_f \times (r_\mathrm{tip} - r_\mathrm{root})$.% TODO: verify c_f and S_f from as-built dimensions
+
+\paragraph{Collective pitch and design selection.}
+The hydrofoil is mounted at a fixed collective pitch angle $\beta$ relative to
+the horizontal plane.  A blade-element parameter sweep over inclination angles
+$\beta \in \{5^{\circ}, 10^{\circ}, 15^{\circ}, 20^{\circ}, 25^{\circ},
+30^{\circ}\}$ and chord lengths $c_f \in \{150, 200, 350\}\;\mathrm{mm}$
+(Chapter~\ref{chapter:dynamic}) identifies the combinations that yield
+sufficient ejection velocity while maintaining the target $\omega_z^*$.% TODO: state chosen beta from experimental results
+
+The pitch angle is adjustable between test runs by repositioning the foil
+mount; this allows the collective pitch to be tuned experimentally against the
+in-flight spin rate and hop height without requiring a new fabrication cycle.
+No active pitch control is implemented: the pitch is fixed for any given
+flight session.
