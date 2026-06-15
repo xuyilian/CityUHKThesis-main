@@ -4,11 +4,9 @@
 \section{Coordinate Frames and System Definition}
 \label{sec:coord_frames}
 
-The flight dynamics and control framework presented in this chapter follows
-the formulation of \textcite{bai2020splitflyer,bai2022splitflyerair} for
-rotating underactuated rotorcraft, adapted to the present vehicle.  The
-critical design feature distinguishing this quadrotor from a conventional
-multirotor is that \emph{all four propellers spin in the same direction}.
+This chapter presents the flight dynamics and control framework for the
+vehicle.  The critical design feature of this quadrotor is that
+\emph{all four propellers spin in the same direction}.
 The individual aerodynamic yaw torques therefore do not cancel, and the
 vehicle sustains a non-zero net yaw torque during flight.  At equilibrium
 this drives the vehicle to a constant spinning yaw rate---the
@@ -115,10 +113,7 @@ two-dimensional lift slope $a_0$, and arm length $l$.
 \section{Translational Dynamics}
 \label{sec:translational_dynamics}
 
-The translational dynamics follow directly from the framework of
-\textcite{bai2022splitflyerair} and are unchanged by the all-same-direction
-propeller configuration.  Treating the vehicle as a rigid body of mass $m$,
-Newton's second law gives
+Treating the vehicle as a rigid body of mass $m$, Newton's second law gives
 \begin{equation}
     m\ddot{\boldsymbol{p}} = \boldsymbol{R}\sum_{i=1}^{4}\boldsymbol{f}_i
         - mg\hat{e}_3,
@@ -202,16 +197,14 @@ gives
 \end{align}
 where $\boldsymbol{p}_2 = [x,\,y]^{\top}$ is the horizontal position.
 Equation~\eqref{eq:horiz_dyn} shows that horizontal acceleration is driven
-solely by the vehicle tilt $\boldsymbol{\eta}$---the same result as for a
-conventional quadrotor or the SplitFlyer bicopter---and forms the basis of
-the position controller in Section~\ref{sec:controller}.
+solely by the vehicle tilt $\boldsymbol{\eta}$, and forms the basis of the
+position controller in Section~\ref{sec:controller}.
 
 \section{Attitude Dynamics}
 \label{sec:attitude_dynamics}
 
 The rotational motion is governed by Euler's equations in the body frame.
-Following the framework of \textcite{bai2022splitflyerair}, the angular
-momentum equation is
+The angular momentum equation is
 \begin{equation}
     \boldsymbol{I}\dot{\boldsymbol{\omega}}
         + \boldsymbol{\omega}\times\boldsymbol{I}\boldsymbol{\omega}
@@ -413,10 +406,7 @@ a constant yaw rate $\omega_z^*$ satisfying~\eqref{eq:omegaz_hover}, with
 the tilt rates $|\omega_x|, |\omega_y|$ remaining small compared to
 $\omega_z^*$.  This separation of timescales motivates a reduced
 two-dimensional description in the tilt state $\boldsymbol{\eta}$ that
-eliminates the fast yaw and captures only the controllable attitude evolution.
-The derivation follows the angular-momentum formulation of
-\textcite{bai2022splitflyerair}, extended here to include the hydrofoil
-advancing/retreating blade coupling.
+eliminates the fast yaw and retains only the controllable attitude evolution.
 
 \paragraph{Inertial angular momentum.}
 The angular momentum in the inertial frame is
@@ -521,12 +511,12 @@ the \emph{gyroscopic reduced attitude equation}:
           - K_{AB}\dot{\boldsymbol{p}}_2.}
     \label{eq:reduced_attitude}
 \end{equation}
-The first two terms on the left are direct counterparts of the SplitFlyer
-bicopter equation~\cite{bai2022splitflyerair}; $-\bar{D}\dot{\boldsymbol{\eta}}$
-is the projected aerodynamic damping; and $-K_{AB}\dot{\boldsymbol{p}}_2$ is
-the new hydrofoil flapping term from Section~\ref{sec:attitude_dynamics},
-which injects the horizontal translational velocity as a disturbance into the
-tilt dynamics.
+The gyroscopic term $I_z\omega_z^*\boldsymbol{J}\dot{\boldsymbol{\eta}}$
+couples the two tilt channels through precession of the spin angular momentum;
+$-\bar{D}\dot{\boldsymbol{\eta}}$ is the projected aerodynamic damping;
+and $-K_{AB}\dot{\boldsymbol{p}}_2$ is the hydrofoil advancing/retreating
+blade term from Section~\ref{sec:attitude_dynamics}, which injects the
+horizontal translational velocity as a disturbance into the tilt dynamics.
 
 Together with the horizontal position equation~\eqref{eq:horiz_dyn}:
 \begin{equation}
@@ -538,21 +528,14 @@ coupled fourth-order system in $(\boldsymbol{p}_2,\boldsymbol{\eta})$ driven
 by $\tilde{\boldsymbol{\tau}}_w$.  This is the plant model for the controller
 developed in Section~\ref{sec:controller}.
 
-\paragraph{Actuation and comparison with the SplitFlyer bicopter.}
-The reduced input $\tilde{\boldsymbol{\tau}}_w$ is a two-component vector that
-must be realised by the propeller thrusts.  The SplitFlyer bicopter (two
-propellers) can generate only one roll/pitch torque component at any instant;
-it relies on cyclic modulation of the thrust commands at the vehicle yaw
-frequency to steer the torque vector in an arbitrary horizontal direction,
-requiring a low-pass filter on the attitude feedback to separate the
-commanded attitude from the cyclic ripple~\cite{bai2020splitflyer}.
-
-This vehicle has four independently commandable propellers, providing three
-effective degrees of freedom: total thrust $F$, body-frame roll torque
-$\tau_x^b$, and body-frame pitch torque $\tau_y^b$.  Any desired
-$\tilde{\boldsymbol{\tau}}_w$ can therefore be generated \emph{statically},
-with no cyclic modulation and no low-pass filter on the attitude feedback.
-The explicit thrust mapping is
+\paragraph{Actuation: degrees of freedom and thrust generation.}
+The reduced input $\tilde{\boldsymbol{\tau}}_w$ is a two-component vector
+realised by the four propeller thrusts.  The four independently commandable
+propellers provide three effective degrees of freedom: total thrust $F$,
+body-frame roll torque $\tau_x^b$, and body-frame pitch torque $\tau_y^b$.
+Any desired $\tilde{\boldsymbol{\tau}}_w$ can be generated \emph{statically}
+by a fixed differential thrust pattern, with no time-varying modulation of
+the thrust commands.  The explicit mapping is
 \begin{equation}
     \begin{bmatrix}F\\\tau_x^b\\\tau_y^b\end{bmatrix}
     = \boldsymbol{M}
@@ -573,3 +556,116 @@ power, as discussed in Section~\ref{sec:controller}.  Yaw remains passive
 
 \section{Controller Design}
 \label{sec:controller}
+
+The control objective is to track a desired horizontal trajectory
+$\boldsymbol{p}_{2,d}(t)$ and altitude set-point $z_d$ while maintaining the
+passive relaxed-hover spin of Section~\ref{sec:attitude_dynamics}.  The yaw
+degree of freedom requires no active control.
+
+\paragraph{Non-cascaded horizontal controller.}
+Define the horizontal position error $\tilde{\boldsymbol{e}} =
+\boldsymbol{p}_2 - \boldsymbol{p}_{2,d}$.  From~\eqref{eq:horiz_coupled},
+the attitude and its rate are related to position derivatives by
+\begin{equation}
+    \boldsymbol{\eta} = -\frac{1}{g}\boldsymbol{J}\ddot{\boldsymbol{p}}_2,
+    \qquad
+    \dot{\boldsymbol{\eta}} = -\frac{1}{g}\boldsymbol{J}\boldsymbol{p}_2^{(3)},
+    \label{eq:eta_from_p2}
+\end{equation}
+so the system~\eqref{eq:reduced_attitude}--\eqref{eq:horiz_coupled} is fourth
+order in $\boldsymbol{p}_2$.  Solving~\eqref{eq:reduced_attitude} for
+$\tilde{\boldsymbol{\tau}}_w$ yields the plant input--output relation:
+\begin{equation}
+    \tilde{\boldsymbol{\tau}}_w
+        = -\frac{I_d}{g}\boldsymbol{J}\boldsymbol{p}_2^{(4)}
+          + \bar{D}\dot{\boldsymbol{\eta}}
+          + I_z\omega_z^*\boldsymbol{J}\dot{\boldsymbol{\eta}}
+          + K_{AB}\dot{\boldsymbol{p}}_2.
+    \label{eq:ctrl_inversion}
+\end{equation}
+The last three terms are the known plant dynamics---aerodynamic damping,
+gyroscopic coupling, and hydrofoil blade coupling---to be cancelled
+by the control law.
+
+A fourth-order polynomial constraint is imposed on the error:
+\begin{equation}
+    \tilde{\boldsymbol{e}}^{(4)}
+        + \lambda_3\tilde{\boldsymbol{e}}^{(3)}
+        + \lambda_2\ddot{\tilde{\boldsymbol{e}}}
+        + \lambda_1\dot{\tilde{\boldsymbol{e}}}
+        + \lambda_0\tilde{\boldsymbol{e}} = \boldsymbol{0},
+    \label{eq:error_poly}
+\end{equation}
+which is asymptotically stable when $s^4 + \lambda_3 s^3 + \lambda_2 s^2
++ \lambda_1 s + \lambda_0$ is Hurwitz~\cite{bai2022splitflyerair}.  The
+constraint prescribes the reference fourth derivative:
+\begin{equation}
+    \boldsymbol{p}_2^{(4)}\big|_r
+        = \boldsymbol{p}_{2,d}^{(4)}
+          - \lambda_3\tilde{\boldsymbol{e}}^{(3)}
+          - \lambda_2\ddot{\tilde{\boldsymbol{e}}}
+          - \lambda_1\dot{\tilde{\boldsymbol{e}}}
+          - \lambda_0\tilde{\boldsymbol{e}}.
+    \label{eq:p2_ref}
+\end{equation}
+Substituting~\eqref{eq:p2_ref} into~\eqref{eq:ctrl_inversion} gives the
+horizontal control torque:
+\begin{equation}
+    \tilde{\boldsymbol{\tau}}_{w,r}
+        = -\frac{I_d}{g}\boldsymbol{J}\boldsymbol{p}_2^{(4)}\big|_r
+          + \bar{D}\dot{\boldsymbol{\eta}}
+          + I_z\omega_z^*\boldsymbol{J}\dot{\boldsymbol{\eta}}
+          + K_{AB}\dot{\boldsymbol{p}}_2.
+    \label{eq:ctrl_law}
+\end{equation}
+The first term is the error-driven command from~\eqref{eq:p2_ref}; the
+remaining terms cancel the known plant dynamics.  The jerk
+$\tilde{\boldsymbol{e}}^{(3)}$ in~\eqref{eq:p2_ref} is evaluated as
+$g\boldsymbol{J}\dot{\boldsymbol{\eta}} - \boldsymbol{p}_{2,d}^{(3)}$
+from~\eqref{eq:eta_from_p2}, so all feedback signals reduce to
+$(\boldsymbol{p}_2,\,\dot{\boldsymbol{p}}_2,\,\boldsymbol{\eta},\,
+\dot{\boldsymbol{\eta}})$---quantities available from position sensing and
+an IMU.
+
+\paragraph{Altitude controller.}
+The vertical dynamics~\eqref{eq:vert_dyn} are controlled independently by
+the total thrust.  A proportional-derivative law with gravity compensation
+gives
+\begin{equation}
+    F_r = m\bigl[
+        \ddot{z}_d
+        + k_{v,z}(\dot{z}_d - \dot{z})
+        + k_{p,z}(z_d - z)
+    \bigr] + mg,
+    \label{eq:alt_ctrl}
+\end{equation}
+where $k_{p,z},\,k_{v,z} > 0$ are the altitude proportional and derivative
+gains.
+
+\paragraph{Input allocation.}
+The reference torque $\tilde{\boldsymbol{\tau}}_{w,r}$ is expressed in the
+inertial horizontal frame; its body-frame equivalent is
+\begin{equation}
+    \begin{bmatrix}\tau_x^b\\\tau_y^b\end{bmatrix}
+        = \boldsymbol{R}_{z,2}^{\top}(\psi)\,\tilde{\boldsymbol{\tau}}_{w,r},
+    \label{eq:torque_projection}
+\end{equation}
+where $\boldsymbol{R}_{z,2}(\psi)$ is the $2\times 2$ yaw-rotation submatrix
+of $\boldsymbol{R}$.  The individual propeller thrust commands are then
+obtained from the minimum-norm solution of the mapping~\eqref{eq:input_map}:
+\begin{equation}
+    \boldsymbol{f}_r
+        = \boldsymbol{M}^{\dagger}
+          \begin{bmatrix}F_r\\\tau_x^b\\\tau_y^b\end{bmatrix},
+    \qquad
+    \boldsymbol{M}^{\dagger}
+        = \boldsymbol{M}^{\top}
+          \!\left(\boldsymbol{M}\boldsymbol{M}^{\top}\right)^{-1}.
+    \label{eq:alloc}
+\end{equation}
+If any $f_{i,r} < 0$, the null vector
+$\boldsymbol{n} \propto [1,\,-1,\,1,\,-1]^{\top}$ of $\boldsymbol{M}$
+provides a one-parameter family of solutions: adding any scalar multiple of
+$\boldsymbol{n}$ to $\boldsymbol{f}_r$ shifts all four thrusts equally
+without altering $(F_r,\,\tau_x^b,\,\tau_y^b)$, and can always be chosen
+to satisfy $f_{i,r} \geq 0$.
