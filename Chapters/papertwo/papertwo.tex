@@ -104,11 +104,13 @@ $\omega_z$.  The propulsive thrust follows the standard aerodynamic model
 \end{equation}
 where $k_f > 0$ is a propeller constant.  Section~\ref{sec:attitude_dynamics}
 introduces an additional aerodynamic effect absent from conventional
-multirotor models: an advancing/retreating blade moment arising because each
-propeller disk sweeps through the air as the vehicle yaws.  That analysis
-introduces the blade flap coefficient $k_{AB}$, parameterised by the blade
-chord $c_b$, the two-dimensional lift curve slope $a_0$, and the tip radius
-$r_{\mathrm{tip}} = 50\;\mathrm{mm}$.
+multirotor models: an advancing/retreating blade moment arising because the
+four hydrofoils, attached at the arm tips, sweep through the air as the
+entire vehicle yaws.  The hydrofoil assembly acts as a single large rotor
+disk of radius $l$ rotating at the vehicle yaw rate $\omega_z$; the analysis
+introduces the hydrofoil advancing/retreating blade coefficient $K_{AB}$,
+parameterised by the hydrofoil chord $c_f$, collective pitch $\theta_f$,
+two-dimensional lift slope $a_0$, and arm length $l$.
 
 \section{Translational Dynamics}
 \label{sec:translational_dynamics}
@@ -169,11 +171,14 @@ gravity and is neglected in what follows~\cite{bai2022splitflyerair}, yielding
 
 \paragraph{Note on the advancing/retreating blade effect.}
 The advancing/retreating blade moment derived in
-Section~\ref{sec:attitude_dynamics} acts as a pure torque at each propeller
-hub.  For a rigid fixed-pitch rotor the thrust vector remains aligned with
-$\hat{z}^b$ regardless of in-plane flow, so the flapping moment produces no
-net force on the vehicle and does not appear in~\eqref{eq:trans_eom}.  The
-translational dynamics~\eqref{eq:trans_hover} are therefore unaffected.
+Section~\ref{sec:attitude_dynamics} arises from the spinning hydrofoil
+assembly generating an asymmetric vertical lift distribution when the vehicle
+translates horizontally.  The first-harmonic lift asymmetry produces zero net
+horizontal force by symmetry of the four-foil X-configuration
+(the $\sum_i\sin\phi_i = \sum_i\cos\phi_i = 0$ identities cancel the
+horizontal components), so the effect manifests solely as a torque about the
+vehicle COM and does not appear in~\eqref{eq:trans_eom}.  The translational
+dynamics~\eqref{eq:trans_hover} are therefore unaffected.
 
 \paragraph{Near-hover linearisation.}
 For small inclinations $|\alpha_x|,|\alpha_y|\ll 1$, the body $\hat{z}^b$
@@ -254,114 +259,90 @@ moment arm $\boldsymbol{l}_i$:
 \end{equation}
 
 \paragraph{Advancing/retreating blade moment.}
-A vehicle spinning at constant yaw rate $\omega_z$ introduces an additional
-aerodynamic mechanism absent from conventional multirotor models.  Each
-propeller disk sweeps through air due both to the vehicle's translational
-velocity and to the tangential sweep of its arm.  Denote the resulting
-in-plane (body $\hat{x}^b$--$\hat{y}^b$) component of air velocity at
-propeller hub $i$ by
-\begin{equation}
-    \boldsymbol{v}_{i,\perp}
-        = \bigl(\boldsymbol{R}^{-1}\dot{\boldsymbol{p}}
-               + \boldsymbol{\omega}\times\boldsymbol{l}_i\bigr)_\perp,
-    \label{eq:vin_plane}
-\end{equation}
-where the subscript $\perp$ denotes projection onto the
-$\hat{x}^b$--$\hat{y}^b$ plane.  For a rigid fixed-pitch rotor, this
-in-plane flow creates an asymmetric lift distribution: the \emph{advancing}
-blade (whose tangential speed adds to $|\boldsymbol{v}_{i,\perp}|$)
-generates more lift than the \emph{retreating} blade on the opposite side.
-Since the two sides are equidistant from the hub centre, the first-harmonic
-lift asymmetry produces a net rolling/pitching moment at the hub rather
-than a change in thrust.
+The hydrofoils are attached at the four arm tips at equal radius $l$ from
+the vehicle COM.  As the vehicle spins at yaw rate $\omega_z$, each hydrofoil
+sweeps tangentially at speed $\omega_z l$.  The four-foil assembly therefore
+functions aerodynamically as a single large rotor disk of radius $l$ rotating
+at $\omega_z$---a vehicle-scale rotor distinct from the small propellers.
 
-To quantify this moment, consider a propeller with $N_b$ blades, chord
-$c_b$, collective pitch $\theta_0$, and two-dimensional lift slope $a_0$,
-spinning at blade speed $\Omega_i$ in the direction consistent with $c > 0$.
-At azimuth $\phi$ (measured from $+\hat{x}^b$, counter-clockwise from above)
-the local tangential speed is $U_T = \Omega_i r - |\boldsymbol{v}_{i,\perp}|\sin\phi$,
-and the elemental thrust is $dL = \frac{1}{2}\rho c_b a_0 \theta_0 U_T^2\,dr$.
-Integrating the resulting hub moment $dL\cdot r\sin\phi$ over the disk and
-all blades, only the first-harmonic cross-term
-$-2\Omega_i r|\boldsymbol{v}_{i,\perp}|\sin^2\phi$ survives the azimuthal
-integration (higher harmonics vanish for a uniform-blade rotor).  In vector
-form, the result for a general in-plane flow direction is
+When the vehicle translates horizontally, this large rotor experiences the
+classical advancing/retreating blade asymmetry.  Let
+$\boldsymbol{v}_b = (\boldsymbol{R}^{-1}\dot{\boldsymbol{p}})_\perp$ denote
+the horizontal translational velocity expressed in the body frame.  At foil
+$i$, located at azimuth $\phi_i$ from $+\hat{x}^b$ and tangential direction
+$\hat{\boldsymbol{t}}_i = (-\sin\phi_i,\,\cos\phi_i,\,0)^{\top}$, the total
+tangential airspeed is
 \begin{equation}
-    \boldsymbol{\tau}_{AB,i}
-        = -k_{AB}\,\boldsymbol{v}_{i,\perp},
+    U_i = \omega_z l + \hat{\boldsymbol{t}}_i\cdot\boldsymbol{v}_b.
+    \label{eq:foil_speed}
+\end{equation}
+The first term $\omega_z l$ is the primary sweep speed; the second is the
+translational perturbation that breaks the rotational symmetry.  Modelling
+each hydrofoil as a flat plate with chord $c_f$, collective pitch $\theta_f$,
+and two-dimensional lift slope $a_0$, the aerodynamic lift in air is
+\begin{equation}
+    L_i = k_{HF}\,U_i^2,
+    \qquad
+    k_{HF} = \tfrac{1}{2}\rho\,c_f\,a_0\,\theta_f.
+    \label{eq:foil_lift}
+\end{equation}
+The moment about the COM from the vertical lift force $L_i\hat{e}_3$ at
+arm position $l_i = l(\cos\phi_i,\,\sin\phi_i,\,0)^{\top}$ is
+\begin{equation}
+    \boldsymbol{\tau}_i = L_i\,l
+        \bigl(\sin\phi_i\,\hat{x}^b - \cos\phi_i\,\hat{y}^b\bigr).
+    \label{eq:foil_moment_i}
+\end{equation}
+Expanding $U_i^2 \approx (\omega_z l)^2 + 2\omega_z l\,(\hat{\boldsymbol{t}}_i\cdot\boldsymbol{v}_b)$
+to first order in $|\boldsymbol{v}_b|/(\omega_z l)$ and summing over the
+four X-configuration foils ($\phi_i = 45^{\circ}, 135^{\circ}, 225^{\circ},
+315^{\circ}$), the zeroth-order terms cancel by the identities
+$\sum_i\sin\phi_i = \sum_i\cos\phi_i = 0$, and the first-order cross-terms
+combine using $\sum_i\sin^2\phi_i = \sum_i\cos^2\phi_i = 2$ and
+$\sum_i\sin\phi_i\cos\phi_i = 0$.  The result is
+\begin{equation}
+    \boldsymbol{\tau}_{AB}
+        = -K_{AB}
+            \bigl(\boldsymbol{R}^{-1}\dot{\boldsymbol{p}}\bigr)_\perp,
     \label{eq:tau_ab}
 \end{equation}
-where the \emph{blade flap coefficient} is
+where the \emph{hydrofoil advancing/retreating blade coefficient} is
 \begin{equation}
-    k_{AB}
-        = \frac{N_b}{2}\,\rho\,c_b\,a_0\,\theta_0\,\Omega_i
-          \frac{r_{\mathrm{tip}}^3}{3}.
-    \label{eq:kAB_full}
+    K_{AB} = 4\,k_{HF}\,\omega_z\,l^2
+           = 2\rho\,c_f\,a_0\,\theta_f\,\omega_z\,l^2.
+    \label{eq:KAB}
 \end{equation}
-Comparing~\eqref{eq:kAB_full} with the hovering thrust
-$f_{i,p} = (N_b/2)\rho c_b a_0\theta_0\Omega_i^2 r_{\mathrm{tip}}^3/3$
-yields the compact relation
-\begin{equation}
-    k_{AB} = \frac{f_{i,p}}{\Omega_i} = k_f\Omega_i,
-    \label{eq:kAB_compact}
-\end{equation}
-which links the flap coefficient directly to the thrust model.  Near hover
-all four propellers operate at approximately the same blade speed
-$\Omega_i \approx \Omega_0$, so $k_{AB}$ is effectively constant.
-
-The negative sign in~\eqref{eq:tau_ab} indicates that the moment
-\emph{opposes} the in-plane flow.  For example, when the vehicle
-translates in the $+\hat{x}^b$ direction, the advancing blade is on the
-$-\hat{y}^b$ side (for $c > 0$, i.e.\ counter-clockwise rotation from
-above); its excess lift rolls the vehicle toward $-\hat{x}^b$, creating
-a translation--attitude coupling explored further in
+The coefficient $K_{AB}$ scales with $\omega_z$: the faster the vehicle
+spins (heavier vehicle or thinner air, from~\eqref{eq:omegaz_hover}), the
+stronger the translation--attitude coupling.  The negative sign
+in~\eqref{eq:tau_ab} indicates that the moment opposes the translational
+velocity in the body frame: when the vehicle moves in $+\hat{x}^b$, the
+foil at $\phi_i = 270^{\circ}$ (advancing, on the $-\hat{y}^b$ side for
+$c > 0$) generates more lift, rolling the vehicle toward $-\hat{x}^b$.
+This translation--attitude coupling is absent from conventional multirotor
+models and propagates into the reduced attitude dynamics of
 Section~\ref{sec:reduced_dynamics}.
 
 \paragraph{Complete Euler equation.}
-Substituting all torque contributions into~\eqref{eq:euler}:
+Collecting all torque contributions, with the propeller torques
+$\boldsymbol{\tau}_{i,p}$ and $\boldsymbol{\tau}_{i,d}$ acting at each
+rotor hub and the hydrofoil moment $\boldsymbol{\tau}_{AB}$ acting on the
+vehicle as a whole:
 \begin{equation}
     \boldsymbol{I}\dot{\boldsymbol{\omega}}
         + \boldsymbol{\omega}\times\boldsymbol{I}\boldsymbol{\omega}
         = \sum_{i=1}^{4}
             \bigl(\boldsymbol{\tau}_{i,p}
-                  + \boldsymbol{\tau}_{i,d}
-                  + \boldsymbol{\tau}_{AB,i}\bigr)
+                  + \boldsymbol{\tau}_{i,d}\bigr)
+          + \boldsymbol{\tau}_{AB}
           + \boldsymbol{\tau}_s.
     \label{eq:euler_full}
 \end{equation}
 
-\paragraph{Symmetry cancellation of yaw-sweep flapping.}
-The in-plane velocity~\eqref{eq:vin_plane} has two contributions: the
-vehicle's translational velocity $(\boldsymbol{R}^{-1}\dot{\boldsymbol{p}})_\perp$,
-which is identical for all four propellers, and the arm-sweep velocity
-$(\boldsymbol{\omega}\times\boldsymbol{l}_i)_\perp$, which depends on the
-arm position.  By the same X-configuration symmetry that yielded
-\eqref{eq:drag_cancel}, the in-plane arm-sweep velocities cancel when
-summed:
-\begin{equation}
-    \sum_{i=1}^{4}
-        \bigl(\boldsymbol{\omega}\times\boldsymbol{l}_i\bigr)_\perp
-        = \boldsymbol{0}.
-    \label{eq:ab_sweep_cancel}
-\end{equation}
-This cancellation holds for any body angular velocity and is independent
-of propeller spin direction.  The net advancing/retreating blade torque
-therefore reduces to
-\begin{equation}
-    \sum_{i=1}^{4}\boldsymbol{\tau}_{AB,i}
-        = -4k_{AB}
-            \bigl(\boldsymbol{R}^{-1}\dot{\boldsymbol{p}}\bigr)_\perp,
-    \label{eq:ab_net}
-\end{equation}
-a term driven exclusively by the vehicle's translational velocity expressed
-in the body frame.  This translation--attitude coupling is absent from
-conventional multirotor models and propagates into the reduced attitude
-dynamics of Section~\ref{sec:reduced_dynamics}.
-
 \paragraph{Passive yaw equilibrium.}
-The advancing/retreating blade torque $\boldsymbol{\tau}_{AB,i}$ lies entirely
-in the body $\hat{x}^b$--$\hat{y}^b$ plane and carries no $\hat{z}^b$
-component.  Extracting the $\hat{z}^b$ projection of the complete Euler
+The hydrofoil advancing/retreating blade torque $\boldsymbol{\tau}_{AB}$
+lies entirely in the body $\hat{x}^b$--$\hat{y}^b$ plane and carries no
+$\hat{z}^b$ component.  Extracting the $\hat{z}^b$ projection of the complete Euler
 equation~\eqref{eq:euler_full} and using the fact that the axisymmetric
 inertia tensor makes the gyroscopic term $[\boldsymbol{\omega}\times
 \boldsymbol{I}\boldsymbol{\omega}]_z = (I_d - I_d)\omega_x\omega_y = 0$,
