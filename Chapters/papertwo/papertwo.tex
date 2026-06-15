@@ -354,10 +354,13 @@ is
     \label{eq:foil_drag}
 \end{equation}
 where $C_{D,f}$ is the hydrofoil profile drag coefficient and $S_f$ is the
-foil planform area.  Each drag force acts at moment arm $l$ about the
-$\hat{z}^b$ axis, contributing a yaw-retarding torque $-k_{D,f}l^3\omega_z^2$
-per foil.  Extracting the $\hat{z}^b$ projection of~\eqref{eq:euler_full},
-using $[\boldsymbol{\omega}\times\boldsymbol{I}\boldsymbol{\omega}]_z = 0$
+foil planform area.  For a vehicle operating at a fixed altitude, $\rho$ is a
+constant of the environment; $k_{D,f}$ is therefore determined entirely by the
+foil geometry ($C_{D,f}$, $S_f$) and is a fixed design parameter.  Each drag
+force acts at moment arm $l$ about the $\hat{z}^b$ axis, contributing a
+yaw-retarding torque $-k_{D,f}l^3\omega_z^2$ per foil.  Extracting the
+$\hat{z}^b$ projection of~\eqref{eq:euler_full}, using
+$[\boldsymbol{\omega}\times\boldsymbol{I}\boldsymbol{\omega}]_z = 0$
 (axisymmetric inertia), and collecting all four foil drag torques gives the
 yaw dynamics
 \begin{equation}
@@ -366,39 +369,38 @@ yaw dynamics
           - 4\,k_{D,f}\,l^3\,\omega_z^2.
     \label{eq:yaw_ode}
 \end{equation}
-The quadratic damping term arises directly from the foil geometry and air
-density through $k_{D,f}$; it creates a unique stable equilibrium at
-$\omega_z^* > 0$.  At sustained hover, $F = mg$, giving the
-\emph{relaxed hover spin rate}
+The quadratic drag on the right-hand side is set entirely by the foil
+geometry; it creates a unique stable equilibrium at $\omega_z^* > 0$.
+At sustained hover, $F = mg$, giving the \emph{relaxed hover spin rate}
 \begin{equation}
     \boxed{\omega_z^* = \sqrt{\frac{c\,m\,g}{4\,k_{D,f}\,l^3}}.}
     \label{eq:omegaz_hover}
 \end{equation}
-This equilibrium is reached entirely passively: the spinning hydrofoils
-generate exactly the drag needed to balance the propeller yaw torque, with
-no active yaw input required.
+This equilibrium is reached entirely passively: the foil drag automatically
+balances the propeller yaw torque without any active control input.
 
-\paragraph{Dependence on vehicle mass and air density.}
-Two scaling properties of~\eqref{eq:omegaz_hover} are worth noting.
-First, $\omega_z^*$ increases with vehicle weight $mg$.  A heavier vehicle
-requires greater thrust to hover, increasing the yaw drive torque $cF = cmg$
-while the foil drag geometry is unchanged.  Counterintuitively, a heavier
-vehicle spins \emph{faster} than a geometrically identical lighter one; the
-square-root relationship means doubling the mass raises the spin rate by a
-factor of $\sqrt{2}$.
+\paragraph{Geometric determinants of the spin rate.}
+Equation~\eqref{eq:omegaz_hover} expresses $\omega_z^*$ as the balance
+between two geometric quantities: the propeller reaction coefficient $c$
+(yaw drive per unit thrust) and the foil drag stiffness $4k_{D,f}l^3$
+(drag torque per unit $\omega_z^2$).  For a given vehicle at a given
+altitude both are fixed design parameters, so $\omega_z^*$ is a direct
+consequence of the geometry---not of any control input.
 
-Second, the foil drag coefficient $k_{D,f} = \frac{1}{2}\rho C_{D,f}S_f$
-scales linearly with air density $\rho$.  The thrust-to-drag ratio $c =
-k_\tau/k_f$ is the ratio of two $\rho$-proportional quantities and is
-therefore independent of $\rho$.  Consequently
-\begin{equation}
-    \omega_z^* \propto \sqrt{\frac{mg}{\rho\,C_{D,f}\,S_f\,l^3}},
-    \label{eq:omegaz_scaling}
-\end{equation}
-so the equilibrium spin rate is set by the vehicle weight, the foil drag
-geometry, and the local air density---none of which requires active control.
-At higher altitude (lower $\rho$) the profile drag is weaker and the vehicle
-spins faster.  This constant $\omega_z^*$ is the spin rate assumed in
+The arm length $l$ is particularly influential: the drag torque scales as
+$l^3$ (moment arm $l$ multiplied by drag force $\propto (\omega_z l)^2$),
+so longer arms slow the spin strongly.  Increasing the foil planform area
+$S_f$ or selecting a foil profile with higher $C_{D,f}$ has the same
+effect through $k_{D,f}$.  Conversely, increasing the propeller
+reaction-to-thrust ratio $c$ speeds the vehicle up.
+
+Vehicle weight enters through the hover thrust: a heavier vehicle requires
+more thrust and therefore generates more yaw drive torque $cF = cmg$,
+spinning \emph{faster}.  The square-root relationship makes this sensitivity
+mild---doubling the mass raises $\omega_z^*$ by only $\sqrt{2}$---and means
+the spin rate is robust to small mass variations.
+
+This constant $\omega_z^*$ is the spin rate assumed throughout
 Section~\ref{sec:reduced_dynamics}.
 
 \section{Reduced Dynamics under High Yaw Rate}
