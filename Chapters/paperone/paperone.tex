@@ -52,14 +52,18 @@ minimise the shift of the centre of mass.  The complete vehicle has an all-up
 mass of $m = 70\;\mathrm{g}$.
 
 \paragraph{Hydrofoil mounting.}
-One hydrofoil is attached below each arm, with its span oriented along the
-arm axis.  The foil tip is at radius $r_\mathrm{tip} = 70\;\mathrm{mm}$ from
-the vehicle centre, placing it just inside the propeller tip circle and
-entirely beneath the propeller plane so that it does not interfere with the
-airflow during hovering flight.  This arrangement means the four-foil assembly
-spans from $r_\mathrm{root}$ to $r_\mathrm{tip}$ and rotates at the vehicle
-yaw rate $\omega_z$, acting collectively as a single large rotor disk of
-radius $r_\mathrm{tip}$ as described in Section~\ref{sec:attitude_dynamics}.
+Each hydrofoil is mounted below the frame body at a $45^{\circ}$ azimuthal
+offset from the nearest motor arm, positioning it midway between adjacent
+propellers.  This offset ensures that the downward propeller wash passes
+between the foils rather than directly onto them, avoiding aerodynamic
+interference between the propellers and the hydrofoil surfaces during
+hovering flight.  The foil tip is at radius $r_f = 70\;\mathrm{mm}$ from
+the vehicle centre---$20\;\mathrm{mm}$ beyond the motor arm length of
+$50\;\mathrm{mm}$---placing it just inside the propeller tip circle and
+entirely beneath the propeller plane.  The four-foil assembly rotates at
+the vehicle yaw rate $\omega_z$ and acts collectively as a single large
+rotor disk of radius $r_f$, as described in
+Section~\ref{sec:attitude_dynamics}.
 
 \section{Hydrofoil Geometry Design}
 \label{sec:foil_design}

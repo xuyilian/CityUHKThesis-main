@@ -103,12 +103,13 @@ $\omega_z$.  The propulsive thrust follows the standard aerodynamic model
 where $k_f > 0$ is a propeller constant.  Section~\ref{sec:attitude_dynamics}
 introduces an additional aerodynamic effect absent from conventional
 multirotor models: an advancing/retreating blade moment arising because the
-four hydrofoils, attached at the arm tips, sweep through the air as the
-entire vehicle yaws.  The hydrofoil assembly acts as a single large rotor
-disk of radius $l$ rotating at the vehicle yaw rate $\omega_z$; the analysis
-introduces the hydrofoil advancing/retreating blade coefficient $K_{AB}$,
-parameterised by the hydrofoil chord $c_f$, collective pitch $\theta_f$,
-two-dimensional lift slope $a_0$, and arm length $l$.
+four hydrofoils, mounted between the motor arms at $45^{\circ}$ azimuthal
+offsets, sweep through the air as the entire vehicle yaws.  The hydrofoil
+assembly acts as a single large rotor disk of radius $r_f$ rotating at the
+vehicle yaw rate $\omega_z$; the analysis introduces the hydrofoil
+advancing/retreating blade coefficient $K_{AB}$, parameterised by the
+hydrofoil chord $c_f$, collective pitch $\theta_f$, two-dimensional lift
+slope $a_0$, and foil tip radius $r_f$.
 
 \section{Translational Dynamics}
 \label{sec:translational_dynamics}
@@ -252,11 +253,14 @@ moment arm $\boldsymbol{l}_i$:
 \end{equation}
 
 \paragraph{Advancing/retreating blade moment.}
-The hydrofoils are attached at the four arm tips at equal radius $l$ from
-the vehicle COM.  As the vehicle spins at yaw rate $\omega_z$, each hydrofoil
-sweeps tangentially at speed $\omega_z l$.  The four-foil assembly therefore
-functions aerodynamically as a single large rotor disk of radius $l$ rotating
-at $\omega_z$---a vehicle-scale rotor distinct from the small propellers.
+The four hydrofoils are mounted between the motor arms at $45^{\circ}$
+azimuthal offsets, at azimuths $\phi_i \in \{0^{\circ}, 90^{\circ},
+180^{\circ}, 270^{\circ}\}$ and equal tip radius $r_f$ from the vehicle COM
+(distinct from the motor arm length $l$).  As the vehicle spins at yaw rate
+$\omega_z$, each hydrofoil sweeps tangentially at speed $\omega_z r_f$.
+The four-foil assembly therefore functions aerodynamically as a single large
+rotor disk of radius $r_f$ rotating at $\omega_z$---a vehicle-scale rotor
+distinct from the small propellers.
 
 When the vehicle translates horizontally, this large rotor experiences the
 classical advancing/retreating blade asymmetry.  Let
@@ -266,10 +270,10 @@ $i$, located at azimuth $\phi_i$ from $+\hat{x}^b$ and tangential direction
 $\hat{\boldsymbol{t}}_i = (-\sin\phi_i,\,\cos\phi_i,\,0)^{\top}$, the total
 tangential airspeed is
 \begin{equation}
-    U_i = \omega_z l + \hat{\boldsymbol{t}}_i\cdot\boldsymbol{v}_b.
+    U_i = \omega_z r_f + \hat{\boldsymbol{t}}_i\cdot\boldsymbol{v}_b.
     \label{eq:foil_speed}
 \end{equation}
-The first term $\omega_z l$ is the primary sweep speed; the second is the
+The first term $\omega_z r_f$ is the primary sweep speed; the second is the
 translational perturbation that breaks the rotational symmetry.  Modelling
 each hydrofoil as a flat plate with chord $c_f$, collective pitch $\theta_f$,
 and two-dimensional lift slope $a_0$, the aerodynamic lift in air is
@@ -280,16 +284,16 @@ and two-dimensional lift slope $a_0$, the aerodynamic lift in air is
     \label{eq:foil_lift}
 \end{equation}
 The moment about the COM from the vertical lift force $L_i\hat{e}_3$ at
-arm position $l_i = l(\cos\phi_i,\,\sin\phi_i,\,0)^{\top}$ is
+foil position $r_f(\cos\phi_i,\,\sin\phi_i,\,0)^{\top}$ is
 \begin{equation}
-    \boldsymbol{\tau}_i = L_i\,l
+    \boldsymbol{\tau}_i = L_i\,r_f
         \bigl(\sin\phi_i\,\hat{x}^b - \cos\phi_i\,\hat{y}^b\bigr).
     \label{eq:foil_moment_i}
 \end{equation}
-Expanding $U_i^2 \approx (\omega_z l)^2 + 2\omega_z l\,(\hat{\boldsymbol{t}}_i\cdot\boldsymbol{v}_b)$
-to first order in $|\boldsymbol{v}_b|/(\omega_z l)$ and summing over the
-four X-configuration foils ($\phi_i = 45^{\circ}, 135^{\circ}, 225^{\circ},
-315^{\circ}$), the zeroth-order terms cancel by the identities
+Expanding $U_i^2 \approx (\omega_z r_f)^2 + 2\omega_z r_f\,(\hat{\boldsymbol{t}}_i\cdot\boldsymbol{v}_b)$
+to first order in $|\boldsymbol{v}_b|/(\omega_z r_f)$ and summing over the
+four foils at $\phi_i \in \{0^{\circ}, 90^{\circ}, 180^{\circ}, 270^{\circ}\}$,
+the zeroth-order terms cancel by the identities
 $\sum_i\sin\phi_i = \sum_i\cos\phi_i = 0$, and the first-order cross-terms
 combine using $\sum_i\sin^2\phi_i = \sum_i\cos^2\phi_i = 2$ and
 $\sum_i\sin\phi_i\cos\phi_i = 0$.  The result is
@@ -301,8 +305,8 @@ $\sum_i\sin\phi_i\cos\phi_i = 0$.  The result is
 \end{equation}
 where the \emph{hydrofoil advancing/retreating blade coefficient} is
 \begin{equation}
-    K_{AB} = 4\,k_{HF}\,\omega_z\,l^2
-           = 2\rho\,c_f\,a_0\,\theta_f\,\omega_z\,l^2.
+    K_{AB} = 4\,k_{HF}\,\omega_z\,r_f^2
+           = 2\rho\,c_f\,a_0\,\theta_f\,\omega_z\,r_f^2.
     \label{eq:KAB}
 \end{equation}
 The coefficient $K_{AB}$ scales with $\omega_z$: the faster the vehicle
@@ -337,11 +341,11 @@ The hydrofoil advancing/retreating blade torque $\boldsymbol{\tau}_{AB}$
 lies entirely in the body $\hat{x}^b$--$\hat{y}^b$ plane and carries no
 $\hat{z}^b$ component.  The dominant source of yaw drag in this vehicle is
 the aerodynamic profile drag of the four hydrofoils as they sweep through air.
-At yaw rate $\omega_z$, each foil at arm radius $l$ moves at tangential
-speed $\omega_z l$.  Its profile drag, acting opposite to the sweep direction,
-is
+At yaw rate $\omega_z$, each foil at tip radius $r_f$ moves at tangential
+speed $\omega_z r_f$.  Its profile drag, acting opposite to the sweep
+direction, is
 \begin{equation}
-    D_{f,i} = k_{D,f}\,(\omega_z l)^2,
+    D_{f,i} = k_{D,f}\,(\omega_z r_f)^2,
     \qquad
     k_{D,f} = \tfrac{1}{2}\rho\,C_{D,f}\,S_f,
     \label{eq:foil_drag}
@@ -350,8 +354,8 @@ where $C_{D,f}$ is the hydrofoil profile drag coefficient and $S_f$ is the
 foil planform area.  For a vehicle operating at a fixed altitude, $\rho$ is a
 constant of the environment; $k_{D,f}$ is therefore determined entirely by the
 foil geometry ($C_{D,f}$, $S_f$) and is a fixed design parameter.  Each drag
-force acts at moment arm $l$ about the $\hat{z}^b$ axis, contributing a
-yaw-retarding torque $-k_{D,f}l^3\omega_z^2$ per foil.  Extracting the
+force acts at moment arm $r_f$ about the $\hat{z}^b$ axis, contributing a
+yaw-retarding torque $-k_{D,f}r_f^3\omega_z^2$ per foil.  Extracting the
 $\hat{z}^b$ projection of~\eqref{eq:euler_full}, using
 $[\boldsymbol{\omega}\times\boldsymbol{I}\boldsymbol{\omega}]_z = 0$
 (axisymmetric inertia), and collecting all four foil drag torques gives the
@@ -359,14 +363,14 @@ yaw dynamics
 \begin{equation}
     I_z\dot{\omega}_z
         = c\,F
-          - 4\,k_{D,f}\,l^3\,\omega_z^2.
+          - 4\,k_{D,f}\,r_f^3\,\omega_z^2.
     \label{eq:yaw_ode}
 \end{equation}
 The quadratic drag on the right-hand side is set entirely by the foil
 geometry; it creates a unique stable equilibrium at $\omega_z^* > 0$.
 At sustained hover, $F = mg$, giving the \emph{relaxed hover spin rate}
 \begin{equation}
-    \boxed{\omega_z^* = \sqrt{\frac{c\,m\,g}{4\,k_{D,f}\,l^3}}.}
+    \boxed{\omega_z^* = \sqrt{\frac{c\,m\,g}{4\,k_{D,f}\,r_f^3}}.}
     \label{eq:omegaz_hover}
 \end{equation}
 This equilibrium is reached entirely passively: the foil drag automatically
@@ -375,17 +379,21 @@ balances the propeller yaw torque without any active control input.
 \paragraph{Geometric determinants of the spin rate.}
 Equation~\eqref{eq:omegaz_hover} expresses $\omega_z^*$ as the balance
 between two geometric quantities: the propeller reaction coefficient $c$
-(yaw drive per unit thrust) and the foil drag stiffness $4k_{D,f}l^3$
+(yaw drive per unit thrust) and the foil drag stiffness $4k_{D,f}r_f^3$
 (drag torque per unit $\omega_z^2$).  For a given vehicle at a given
 altitude both are fixed design parameters, so $\omega_z^*$ is a direct
 consequence of the geometry---not of any control input.
 
-The arm length $l$ is particularly influential: the drag torque scales as
-$l^3$ (moment arm $l$ multiplied by drag force $\propto (\omega_z l)^2$),
-so longer arms slow the spin strongly.  Increasing the foil planform area
-$S_f$ or selecting a foil profile with higher $C_{D,f}$ has the same
-effect through $k_{D,f}$.  Conversely, increasing the propeller
-reaction-to-thrust ratio $c$ speeds the vehicle up.
+The foil tip radius $r_f$ is particularly influential: the drag torque
+scales as $r_f^3$ (moment arm $r_f$ multiplied by drag force $\propto
+(\omega_z r_f)^2$), so placing the foils further from the centre slows the
+spin strongly.  Because the foils are mounted between the motor arms at
+radius $r_f > l$, this placement can be adjusted independently of the motor
+arm length $l$, providing an additional design lever for tuning $\omega_z^*$.
+Increasing the foil planform area $S_f$ or selecting a foil profile with
+higher $C_{D,f}$ has the same slowing effect through $k_{D,f}$.
+Conversely, increasing the propeller reaction-to-thrust ratio $c$ speeds
+the vehicle up.
 
 Vehicle weight enters through the hover thrust: a heavier vehicle requires
 more thrust and therefore generates more yaw drive torque $cF = cmg$,
