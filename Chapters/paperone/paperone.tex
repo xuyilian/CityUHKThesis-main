@@ -1,4 +1,4 @@
-\chapter{Design and Fabrication of the Water-Skipping MAV}
+\chapter{Design of the Water-Skipping MAV}
 \label{chapter:paperone}
 
 \section{Design Requirements}
@@ -69,16 +69,22 @@ Section~\ref{sec:attitude_dynamics}.
 \label{sec:foil_design}
 
 \paragraph{Profile and planform.}
-Each hydrofoil is a thin flat plate, chosen for simplicity of fabrication and
-because the flat-plate aerodynamic model (lift coefficient $C_L = 2\sin\alpha
-\cos\alpha$, drag coefficient $C_D = 2\sin^2\alpha$) provides a closed-form
-basis for the blade-element simulation of Chapter~\ref{chapter:dynamic}.  The
-foil spans radially from $r_\mathrm{root}$ to $r_\mathrm{tip} =
-70\;\mathrm{mm}$, giving a span of $r_\mathrm{tip} - r_\mathrm{root}$
-determined by the chord length and the required planform area.  The chord
-length (dimension tangential to the sweep direction) of the fabricated foil is
-$c_f = 10\;\mathrm{mm}$; the resulting planform area per foil is
-$S_f = c_f \times (r_\mathrm{tip} - r_\mathrm{root})$.% TODO: verify c_f and S_f from as-built dimensions
+Each hydrofoil is a thin flat rectangular plate, chosen for simplicity of
+fabrication and because the flat-plate aerodynamic model (lift coefficient
+$C_L = 2\sin\alpha\cos\alpha$, drag coefficient $C_D = 2\sin^2\alpha$)
+provides a closed-form basis for the blade-element simulation of
+Chapter~\ref{chapter:dynamic}.  The foil extends radially inward from the tip
+radius $r_\mathrm{tip} = 70\;\mathrm{mm}$ and is parametrised by its planform
+area $S_f$ and its chord $c_f$ (the dimension tangential to the sweep
+direction).  For a rectangular foil the radial span is $S_f/c_f$, so the root
+radius is
+\begin{equation}
+    r_\mathrm{root} = r_\mathrm{tip} - \frac{S_f}{c_f}.
+    \label{eq:foil_root}
+\end{equation}
+Holding the planform area $S_f$ fixed while varying the chord therefore trades
+chord against span: a wider chord yields a shorter, stubbier foil and a
+narrower chord a longer, slender one.% TODO: state final S_f and c_f from as-built foils
 
 \paragraph{Collective pitch and design selection.}
 The hydrofoil is mounted at a fixed collective pitch angle $\beta$ relative to
@@ -86,9 +92,21 @@ the horizontal plane.  A blade-element parameter sweep over inclination angles
 $\beta \in \{5^{\circ}, 10^{\circ}, 15^{\circ}, 20^{\circ}, 25^{\circ},
 30^{\circ}\}$ and chord lengths $c_f \in \{150, 200, 350\}\;\mathrm{mm}$
 (Chapter~\ref{chapter:dynamic}) identifies the combinations that yield
-sufficient ejection velocity while maintaining the target $\omega_z^*$.% TODO: state chosen beta from experimental results
+sufficient ejection velocity while maintaining the target $\omega_z^*$.% TODO: state chosen beta and c_f from experimental results
 
-Different pitch angles are evaluated by fabricating and swapping separate
-foil sets, each built at a specific $\beta$.  No active or passive pitch
-adjustment mechanism is implemented; the collective pitch is fixed at
-manufacture for each foil.
+Each candidate geometry is realised as a separate fabricated foil set built at
+its specific chord and pitch; geometries are compared by swapping complete
+sets between test runs.  No active or passive pitch adjustment mechanism is
+implemented, and the collective pitch is fixed at manufacture for each foil.
+
+\section{Structural Analysis of the Hydrofoils}
+\label{sec:foil_fea}
+
+% TODO: ANSYS FEA of the candidate hydrofoil geometries.
+% Loads: peak water-impact distributed pressure extracted from the
+%   blade-element model (Chapter~\ref{chapter:dynamic}); root clamped at mount.
+% Static structural: max von Mises vs yield (safety factor); tip deflection
+%   as fraction of chord (justifies the rigid-foil assumption in the BEM model).
+% Modal: first natural frequencies vs spin/impact excitation.
+% Geometry + material sweep -> stiffness/strength/mass trade table feeding
+%   the foil-set selection in Section~\ref{sec:foil_design}.
