@@ -406,5 +406,170 @@ Section~\ref{sec:reduced_dynamics}.
 \section{Reduced Dynamics under High Yaw Rate}
 \label{sec:reduced_dynamics}
 
+The full Euler equation~\eqref{eq:euler_full} governs all three rotational
+degrees of freedom simultaneously.  The equilibrium analysis of
+Section~\ref{sec:attitude_dynamics} established that the vehicle operates at
+a constant yaw rate $\omega_z^*$ satisfying~\eqref{eq:omegaz_hover}, with
+the tilt rates $|\omega_x|, |\omega_y|$ remaining small compared to
+$\omega_z^*$.  This separation of timescales motivates a reduced
+two-dimensional description in the tilt state $\boldsymbol{\eta}$ that
+eliminates the fast yaw and captures only the controllable attitude evolution.
+The derivation follows the angular-momentum formulation of
+\textcite{bai2022splitflyerair}, extended here to include the hydrofoil
+advancing/retreating blade coupling.
+
+\paragraph{Inertial angular momentum.}
+The angular momentum in the inertial frame is
+\begin{equation}
+    \mathbf{h} = \boldsymbol{R}\boldsymbol{I}\boldsymbol{\omega}
+        = I_d\boldsymbol{R}[\omega_x,\;\omega_y,\;0]^{\top}
+          + I_z\omega_z^*\boldsymbol{R}\hat{e}_3.
+    \label{eq:inertial_h}
+\end{equation}
+The second term is the large gyroscopic spin momentum $I_z\omega_z^*$
+directed along the tilting thrust axis $\boldsymbol{R}\hat{e}_3$.
+By Newton's second law in the inertial frame,
+\begin{equation}
+    \dot{\mathbf{h}}
+        = \boldsymbol{R}\!\left(
+            \sum_{i=1}^{4}\bigl(\boldsymbol{\tau}_{i,p}
+                               + \boldsymbol{\tau}_{i,d}\bigr)
+            + \boldsymbol{\tau}_{AB}
+            + \boldsymbol{\tau}_s
+          \right).
+    \label{eq:h_dot}
+\end{equation}
+
+\paragraph{Horizontal projection and gyroscopic coupling.}
+Projecting~\eqref{eq:h_dot} onto the inertial horizontal plane via
+$[e_1,e_2]^{\top}$ and using $[\omega_x, \omega_y]^{\top} \approx
+\dot{\boldsymbol{\eta}}$ for small tilt, the two parts
+of~\eqref{eq:inertial_h} contribute separately.  The tilt momentum term
+gives $I_d\ddot{\boldsymbol{\eta}}$ on differentiation.  The spin momentum
+term $I_z\omega_z^*\boldsymbol{R}\hat{e}_3$ precesses as the body tilts:
+\begin{equation}
+    [e_1,e_2]^{\top}
+    \frac{\mathrm{d}}{\mathrm{d}t}
+    \bigl(I_z\omega_z^*\boldsymbol{R}\hat{e}_3\bigr)
+    = I_z\omega_z^*[e_1,e_2]^{\top}
+      \boldsymbol{R}\bigl(\boldsymbol{\omega}\times\hat{e}_3\bigr)
+    \approx I_z\omega_z^*\boldsymbol{J}\dot{\boldsymbol{\eta}},
+    \label{eq:gyro_proj}
+\end{equation}
+where the last step uses $\boldsymbol{\omega}\times\hat{e}_3 \approx
+\boldsymbol{J}\boldsymbol{\omega}_h = [\omega_y,-\omega_x]^{\top}$ and the
+fact that $\boldsymbol{J}$ commutes with planar rotations (since $\boldsymbol{J}$
+is itself a $-90^{\circ}$ rotation in the horizontal
+plane)~\cite{bai2022splitflyerair}.  The result is the \emph{gyroscopic
+coupling} term $I_z\omega_z^*\boldsymbol{J}\dot{\boldsymbol{\eta}}$: the
+large spin angular momentum precesses in the inertial plane as the vehicle
+tilts, coupling $\dot{\alpha}_x$ into the $\alpha_y$ equation and vice
+versa.
+
+\paragraph{Projected external torques.}
+Three torque groups appear on the right side of~\eqref{eq:h_dot}.
+
+\noindent\textit{Control torques.}
+The inertial projection of the thrust-induced roll/pitch torques defines the
+\emph{reduced control input}:
+\begin{equation}
+    \tilde{\boldsymbol{\tau}}_w
+        = [e_1,e_2]^{\top}\boldsymbol{R}
+          \sum_{i=1}^{4}\bigl(\boldsymbol{l}_i\times f_{i,p}\hat{e}_3\bigr).
+    \label{eq:tau_w_reduced}
+\end{equation}
+The yaw reaction torques $cf_{i,p}\hat{e}_3$ project to $cF\boldsymbol{J}\boldsymbol{\eta}$,
+which is second-order in tilt amplitude and is neglected.
+
+\noindent\textit{Drag torques.}
+The horizontal arm-sweep component of the rotor drag produces only yaw
+torque (its roll/pitch contribution cancels by
+symmetry~\eqref{eq:drag_cancel}).  The vertical rotor drag at each hub,
+arising from the tilt-induced hub velocity $(\boldsymbol{\omega}\times
+\boldsymbol{l}_i)_z$, contributes a roll/pitch damping; summing over four
+arms of equal length gives $-2B_v l^2\dot{\boldsymbol{\eta}}$.  Adding the
+body damping $-D_h\dot{\boldsymbol{\eta}}$ from $\boldsymbol{\tau}_s$ defines
+the \emph{effective tilt damping coefficient}
+\begin{equation}
+    \bar{D} \triangleq 2B_v l^2 + D_h,
+    \label{eq:Dbar}
+\end{equation}
+so the projected drag torque is $\tilde{\boldsymbol{\tau}}_d =
+-\bar{D}\dot{\boldsymbol{\eta}}$.
+
+\noindent\textit{Hydrofoil advancing/retreating blade torque.}
+From~\eqref{eq:tau_ab}, the advancing/retreating blade moment in the body
+frame is $\boldsymbol{\tau}_{AB} = -K_{AB}(\boldsymbol{R}^{-1}
+\dot{\boldsymbol{p}})_\perp$.  Projecting to the inertial horizontal plane
+near hover, where $\boldsymbol{R}(\boldsymbol{R}^{-1}\dot{\boldsymbol{p}})_\perp
+\approx \dot{\boldsymbol{p}}_2$ for small tilt, gives
+\begin{equation}
+    \tilde{\boldsymbol{\tau}}_{AB}
+        = [e_1,e_2]^{\top}\boldsymbol{R}\,\boldsymbol{\tau}_{AB}
+        \approx -K_{AB}\dot{\boldsymbol{p}}_2.
+    \label{eq:tau_AB_reduced}
+\end{equation}
+
+\paragraph{Reduced attitude equation.}
+Combining the projected angular momentum with all external torques yields
+the \emph{gyroscopic reduced attitude equation}:
+\begin{equation}
+    \boxed{I_d\ddot{\boldsymbol{\eta}}
+        + I_z\omega_z^*\boldsymbol{J}\dot{\boldsymbol{\eta}}
+        = \tilde{\boldsymbol{\tau}}_w
+          - \bar{D}\dot{\boldsymbol{\eta}}
+          - K_{AB}\dot{\boldsymbol{p}}_2.}
+    \label{eq:reduced_attitude}
+\end{equation}
+The first two terms on the left are direct counterparts of the SplitFlyer
+bicopter equation~\cite{bai2022splitflyerair}; $-\bar{D}\dot{\boldsymbol{\eta}}$
+is the projected aerodynamic damping; and $-K_{AB}\dot{\boldsymbol{p}}_2$ is
+the new hydrofoil flapping term from Section~\ref{sec:attitude_dynamics},
+which injects the horizontal translational velocity as a disturbance into the
+tilt dynamics.
+
+Together with the horizontal position equation~\eqref{eq:horiz_dyn}:
+\begin{equation}
+    m\ddot{\boldsymbol{p}}_2 = mg\boldsymbol{J}\boldsymbol{\eta},
+    \label{eq:horiz_coupled}
+\end{equation}
+equations~\eqref{eq:reduced_attitude}--\eqref{eq:horiz_coupled} form a
+coupled fourth-order system in $(\boldsymbol{p}_2,\boldsymbol{\eta})$ driven
+by $\tilde{\boldsymbol{\tau}}_w$.  This is the plant model for the controller
+developed in Section~\ref{sec:controller}.
+
+\paragraph{Actuation and comparison with the SplitFlyer bicopter.}
+The reduced input $\tilde{\boldsymbol{\tau}}_w$ is a two-component vector that
+must be realised by the propeller thrusts.  The SplitFlyer bicopter (two
+propellers) can generate only one roll/pitch torque component at any instant;
+it relies on cyclic modulation of the thrust commands at the vehicle yaw
+frequency to steer the torque vector in an arbitrary horizontal direction,
+requiring a low-pass filter on the attitude feedback to separate the
+commanded attitude from the cyclic ripple~\cite{bai2020splitflyer}.
+
+This vehicle has four independently commandable propellers, providing three
+effective degrees of freedom: total thrust $F$, body-frame roll torque
+$\tau_x^b$, and body-frame pitch torque $\tau_y^b$.  Any desired
+$\tilde{\boldsymbol{\tau}}_w$ can therefore be generated \emph{statically},
+with no cyclic modulation and no low-pass filter on the attitude feedback.
+The explicit thrust mapping is
+\begin{equation}
+    \begin{bmatrix}F\\\tau_x^b\\\tau_y^b\end{bmatrix}
+    = \boldsymbol{M}
+      \begin{bmatrix}f_{1,p}\\f_{2,p}\\f_{3,p}\\f_{4,p}\end{bmatrix},
+    \qquad
+    \boldsymbol{M} = \begin{bmatrix}
+        1 & 1 & 1 & 1 \\
+        \tfrac{l}{\sqrt{2}} & -\tfrac{l}{\sqrt{2}} & -\tfrac{l}{\sqrt{2}} & \tfrac{l}{\sqrt{2}} \\
+        -\tfrac{l}{\sqrt{2}} & -\tfrac{l}{\sqrt{2}} & \tfrac{l}{\sqrt{2}} & \tfrac{l}{\sqrt{2}}
+    \end{bmatrix},
+    \label{eq:input_map}
+\end{equation}
+obtained from~\eqref{eq:tau_thrust} for the X-configuration~\eqref{eq:prop_locs}.
+The one-dimensional null space of $\boldsymbol{M}$ can be exploited to
+satisfy the positivity constraints $f_{i,p}\geq 0$ or to minimise total
+power, as discussed in Section~\ref{sec:controller}.  Yaw remains passive
+($\tau_z = cF$) throughout.
+
 \section{Controller Design}
 \label{sec:controller}
