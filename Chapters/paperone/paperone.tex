@@ -13,12 +13,18 @@ it back into the air.
 The target all-up mass is $m = 70\;\mathrm{g}$.  All four propellers spin in
 the same direction, so yaw torque cannot be independently cancelled; the
 vehicle instead reaches the relaxed-hover equilibrium spin rate
-$\omega_z^*$ derived in Chapter~\ref{chapter:papertwo}.  The design target
-spin rate is approximately $66\;\mathrm{rad\,s^{-1}}$, set by the interplay of
-propeller reaction torque and hydrofoil profile drag (equation~\eqref{eq:omegaz_hover}).
-The four rotors are driven from a single-cell (\SI{3.7}{V} nominal) lithium
-polymer battery, which constrains motor selection to high-KV, small-diameter
-units compatible with the propeller geometry.
+$\omega_z^*$ derived in Chapter~\ref{chapter:papertwo}.  The attitude
+controller runs at a loop rate of $100\;\mathrm{Hz}$, and to remain
+controllable the vehicle must turn through no more than one revolution per
+control cycle; the spin rate is therefore constrained to
+$\omega_z^* < 200\pi\;\mathrm{rad\,s^{-1}}$ (equation~\eqref{eq:omegaz_hover}).
+Because the same-direction propellers would otherwise drive the vehicle well
+above this limit, dedicated drag plates (Section~\ref{sec:foil_design}) are
+added to raise the passive yaw drag and hold $\omega_z^*$ within the
+controllable range.  The four rotors are driven from a single-cell
+(\SI{3.7}{V} nominal) lithium polymer battery, which constrains motor
+selection to high-KV, small-diameter units compatible with the propeller
+geometry.
 
 \paragraph{Water-skipping requirements.}
 For a successful hop the hydrofoils must, during the brief submersion phase,
@@ -51,53 +57,67 @@ lithium polymer cell of capacity $550\;\mathrm{mAh}$, mounted centrally to
 minimise the shift of the centre of mass.  The complete vehicle has an all-up
 mass of $m = 70\;\mathrm{g}$.
 
-\paragraph{Hydrofoil mounting.}
-Each hydrofoil is mounted below the frame body at a $45^{\circ}$ azimuthal
-offset from the nearest motor arm, positioning it midway between adjacent
-propellers.  This offset ensures that the downward propeller wash passes
-between the foils rather than directly onto them, avoiding aerodynamic
-interference between the propellers and the hydrofoil surfaces during
-hovering flight.  The foil tip is at radius $r_f = 70\;\mathrm{mm}$ from
-the vehicle centre---$20\;\mathrm{mm}$ beyond the motor arm length of
-$50\;\mathrm{mm}$---placing it just inside the propeller tip circle and
-entirely beneath the propeller plane.  The four-foil assembly rotates at
-the vehicle yaw rate $\omega_z$ and acts collectively as a single large
-rotor disk of radius $r_f$, as described in
-Section~\ref{sec:attitude_dynamics}.
+\paragraph{Spin-limiting and hydrofoil assembly.}
+At each of the four $45^{\circ}$ azimuthal offsets, a vertical support extends
+downward from the frame and carries a two-part element that points radially
+inward toward the vehicle centre.  The upper part is a flat \emph{drag plate}
+whose face is parallel to the yaw axis, so that as the vehicle spins the plate
+sweeps broadside through the air and generates large profile drag; this drag
+is the primary means of limiting the passive spin rate
+(Section~\ref{sec:design_requirements}).  Directly beneath each drag plate is
+a \emph{hydrofoil}, the angled surface that produces hydrodynamic lift during
+the brief water-surface contact.  Both elements sit midway between adjacent
+propellers so that the downward propeller wash passes between them rather than
+directly onto them, avoiding aerodynamic interference during hovering flight.
+The hydrofoil tip reaches a radius $r_f = 70\;\mathrm{mm}$ from the vehicle
+centre---$20\;\mathrm{mm}$ beyond the motor arm length $l = 50\;\mathrm{mm}$
+---placing it just inside the propeller tip circle and beneath the propeller
+plane.  The four-element assembly rotates with the vehicle at yaw rate
+$\omega_z$, as described in Section~\ref{sec:attitude_dynamics}.
 
-\section{Hydrofoil Geometry Design}
+\section{Hydrofoil and Drag-Plate Geometry}
 \label{sec:foil_design}
 
-\paragraph{Profile and planform.}
-Each hydrofoil is a thin flat rectangular plate, chosen for simplicity of
-fabrication and because the flat-plate aerodynamic model (lift coefficient
+\paragraph{Drag plate.}
+The drag plate is a flat rectangular fin mounted vertically---its plane
+containing the yaw axis---and extending radially inward from the support.  As
+the vehicle spins, the plate presents its broad face to the oncoming air and
+acts purely as a spin brake: it generates negligible vertical force but large
+yaw-opposing drag, setting the relaxed-hover spin rate $\omega_z^*$ through
+the passive balance derived in Section~\ref{sec:attitude_dynamics}.  The plate
+is characterised by its planform area $S_d$, its drag coefficient $C_{D,d}$
+(close to that of a flat plate in broadside flow), and the effective radius
+$r_d$ of its area centroid from the vehicle centre.  These are fixed at
+manufacture and chosen so that $\omega_z^*$ falls below the controllability
+ceiling $200\pi\;\mathrm{rad\,s^{-1}}$.% TODO: state final S_d, r_d from as-built plates
+
+\paragraph{Hydrofoil profile and planform.}
+Each hydrofoil is a thin flat plate, chosen for simplicity of fabrication and
+because the flat-plate hydrodynamic model (lift coefficient
 $C_L = 2\sin\alpha\cos\alpha$, drag coefficient $C_D = 2\sin^2\alpha$)
 provides a closed-form basis for the blade-element simulation of
 Chapter~\ref{chapter:dynamic}.  The foil extends radially inward from the tip
-radius $r_\mathrm{tip} = 70\;\mathrm{mm}$ and is parametrised by its planform
-area $S_f$ and its chord $c_f$ (the dimension tangential to the sweep
-direction).  For a rectangular foil the radial span is $S_f/c_f$, so the root
+radius $r_\mathrm{tip} = r_f = 70\;\mathrm{mm}$ and is parametrised by its
+planform area $S_f$ and chord $c_f$ (the dimension tangential to the sweep
+direction); for a rectangular foil the radial span is $S_f/c_f$, so the root
 radius is
 \begin{equation}
     r_\mathrm{root} = r_\mathrm{tip} - \frac{S_f}{c_f}.
     \label{eq:foil_root}
 \end{equation}
-Holding the planform area $S_f$ fixed while varying the chord therefore trades
-chord against span: a wider chord yields a shorter, stubbier foil and a
-narrower chord a longer, slender one.% TODO: state final S_f and c_f from as-built foils
+% TODO: state final S_f and c_f from as-built foils
 
-\paragraph{Collective pitch and design selection.}
-The hydrofoil is mounted at a fixed collective pitch angle $\beta$ relative to
-the horizontal plane.  A blade-element parameter sweep over inclination angles
-$\beta \in \{5^{\circ}, 10^{\circ}, 15^{\circ}, 20^{\circ}, 25^{\circ},
-30^{\circ}\}$ and chord lengths $c_f \in \{150, 200, 350\}\;\mathrm{mm}$
-(Chapter~\ref{chapter:dynamic}) identifies the combinations that yield
-sufficient ejection velocity while maintaining the target $\omega_z^*$.% TODO: state chosen beta and c_f from experimental results
-
-Each candidate geometry is realised as a separate fabricated foil set built at
-its specific chord and pitch; geometries are compared by swapping complete
-sets between test runs.  No active or passive pitch adjustment mechanism is
-implemented, and the collective pitch is fixed at manufacture for each foil.
+\paragraph{Attack angle as the design variable.}
+The hydrofoil is mounted at a fixed attack angle $\beta$ relative to the
+horizontal plane, and this angle is the primary independent variable of the
+experimental study.  Candidate values $\beta \in \{5^{\circ}, 10^{\circ},
+15^{\circ}, 20^{\circ}, 25^{\circ}, 30^{\circ}\}$ are evaluated against
+ejection velocity and hop height, with the blade-element model of
+Chapter~\ref{chapter:dynamic} predicting the corresponding water-skipping
+performance.  Each value of $\beta$ is realised as a separate fabricated
+hydrofoil, and angles are compared by swapping complete foil sets between test
+runs.  No active or passive attack-angle mechanism is implemented; $\beta$ is
+fixed at manufacture for each foil.
 
 \section{Structural Analysis of the Hydrofoils}
 \label{sec:foil_fea}
