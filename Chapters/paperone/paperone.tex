@@ -15,15 +15,16 @@ the same direction, so yaw torque cannot be independently cancelled; the
 vehicle instead reaches the relaxed-hover equilibrium spin rate
 $\omega_z^*$ derived in Chapter~\ref{chapter:papertwo}.  The attitude
 controller runs at a loop rate of $100\;\mathrm{Hz}$, and to remain
-controllable the vehicle must turn through no more than one revolution per
-control cycle; the spin rate is therefore constrained to
-$\omega_z^* < 200\pi\;\mathrm{rad\,s^{-1}}$ (equation~\eqref{eq:omegaz_hover}).
+controllable the spin must be slow enough to leave several control updates
+within each revolution; the spin rate is therefore constrained to
+$\omega_z^* < 20\pi\;\mathrm{rad\,s^{-1}}$ ($\approx 62.8\;\mathrm{rad\,s^{-1}}$,
+i.e.\ at least ten control updates per revolution; equation~\eqref{eq:omegaz_hover}).
 Because the same-direction propellers would otherwise drive the vehicle well
 above this limit, dedicated drag plates (Section~\ref{sec:foil_design}) are
 added to raise the passive yaw drag and hold $\omega_z^*$ within the
 controllable range.  In operation the spin settles near
 $\omega_z^* \approx 52\;\mathrm{rad\,s^{-1}}$ ($3000^{\circ}\,\mathrm{s^{-1}}$),
-well below this ceiling.  The four rotors are driven from a single-cell
+just within this ceiling.  The four rotors are driven from a single-cell
 (\SI{3.7}{V} nominal) lithium polymer battery, which constrains motor
 selection to high-KV, small-diameter units compatible with the propeller
 geometry.
@@ -91,7 +92,7 @@ is characterised by its planform area $S_d$, its drag coefficient $C_{D,d}$
 (close to that of a flat plate in broadside flow), and the effective radius
 $r_d$ of its area centroid from the vehicle centre.  These are fixed at
 manufacture and chosen so that $\omega_z^*$ falls below the controllability
-ceiling $200\pi\;\mathrm{rad\,s^{-1}}$.% TODO: state final S_d, r_d from as-built plates
+ceiling $20\pi\;\mathrm{rad\,s^{-1}}$.% TODO: state final S_d, r_d from as-built plates
 
 \paragraph{Hydrofoil profile and planform.}
 Each hydrofoil is a thin flat plate, chosen for simplicity of fabrication and
