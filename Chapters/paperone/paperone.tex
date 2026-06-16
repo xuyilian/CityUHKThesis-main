@@ -21,7 +21,9 @@ $\omega_z^* < 200\pi\;\mathrm{rad\,s^{-1}}$ (equation~\eqref{eq:omegaz_hover}).
 Because the same-direction propellers would otherwise drive the vehicle well
 above this limit, dedicated drag plates (Section~\ref{sec:foil_design}) are
 added to raise the passive yaw drag and hold $\omega_z^*$ within the
-controllable range.  The four rotors are driven from a single-cell
+controllable range.  In operation the spin settles near
+$\omega_z^* \approx 52\;\mathrm{rad\,s^{-1}}$ ($3000^{\circ}\,\mathrm{s^{-1}}$),
+well below this ceiling.  The four rotors are driven from a single-cell
 (\SI{3.7}{V} nominal) lithium polymer battery, which constrains motor
 selection to high-KV, small-diameter units compatible with the propeller
 geometry.
@@ -105,7 +107,9 @@ radius is
     r_\mathrm{root} = r_\mathrm{tip} - \frac{S_f}{c_f}.
     \label{eq:foil_root}
 \end{equation}
-% TODO: state final S_f and c_f from as-built foils
+The fabricated hydrofoil has chord $c_f = 10\;\mathrm{mm}$ and radial span
+$30\;\mathrm{mm}$, giving a planform area $S_f = 300\;\mathrm{mm}^2$ and, from
+\eqref{eq:foil_root}, a root radius $r_\mathrm{root} = 40\;\mathrm{mm}$.
 
 \paragraph{Attack angle as the design variable.}
 The hydrofoil is mounted at a fixed attack angle $\beta$ relative to the
