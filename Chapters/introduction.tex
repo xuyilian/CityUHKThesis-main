@@ -2,8 +2,42 @@
 \label{chapter:introduction}
 
 \section{Background and Motivation}
+\label{sec:background_motivation}
+
+Micro aerial vehicles (MAVs) have become capable platforms for environmental
+monitoring, search and rescue, and inspection, yet the overwhelming majority
+operate exclusively in the air.  Many of the environments where small robots
+are most useful---rivers, lakes, flooded terrain, and coastal zones---are
+dominated by water, and a vehicle confined to flight must expend continuous
+power to remain aloft above them.  Extending an MAV's mobility to include the
+water surface would broaden its operational envelope to tasks such as water
+sampling, surface skimming, and persistent monitoring of aquatic environments,
+while allowing the vehicle to rest on or interact with the surface between
+flight phases.% TODO: cite MAV applications / amphibious aerial robots
+
+The central difficulty is not resting on water but leaving it again.  For a
+small, weight- and power-constrained vehicle, repeatedly taking off from the
+water surface is energetically demanding: overcoming surface adhesion and
+accelerating from rest into flight typically requires either oversized thrust
+or dedicated launch mechanisms that add mass and complexity.  As a result,
+most amphibious aerial robots treat water contact as a terminal
+state---landing, floating, or sampling---rather than as a mode of locomotion
+in its own right.% TODO: cite water-takeoff mechanisms / aquatic-aerial robots
+
+A different possibility is suggested by stone-skipping.  A flat stone thrown
+at a shallow angle skips across water because, during each brief contact, the
+water produces a large transient hydrodynamic reaction that redirects the
+stone upward before it can sink; the contact is short, the energy lost per
+bounce is small, and the stone traverses the surface in a sequence of low-cost
+hops.% TODO: cite stone-skipping physics (e.g. Bocquet 2003)
+This thesis adapts that principle to a powered vehicle: rather than hovering
+above the water or floating on it, the vehicle hops across the surface, using
+brief hydrofoil contact to recover much of the energy needed to return to the
+air.  The mechanism that makes this possible is described in
+Section~\ref{sec:water_skipping_mechanism}.
 
 \section{Water-Skipping Mechanism}
+\label{sec:water_skipping_mechanism}
 
 \section{Related Work}
 
