@@ -39,7 +39,93 @@ Section~\ref{sec:water_skipping_mechanism}.
 \section{Water-Skipping Mechanism}
 \label{sec:water_skipping_mechanism}
 
+The vehicle is a quadrotor whose four rotors all spin in the same direction.
+Because their aerodynamic reaction torques do not cancel, the airframe itself
+rotates continuously about its vertical axis during flight, settling at a
+constant spin rate.  Mounted beneath the body, one under each arm, are four
+hydrofoils that rotate rigidly with the airframe; as the vehicle spins, each
+hydrofoil sweeps through a circular path at a tangential speed set by the spin
+rate and its radius from the centre.
+
+A single hop proceeds in three phases.  The vehicle first climbs and then
+enters a brief free-fall, descending toward a still water surface.  At contact
+the spinning hydrofoils slice into the water, and the combination of their
+tangential sweep speed and their inclined attack angle generates a large
+hydrodynamic lift.  Because the foils sweep continuously and the submersion
+lasts only a few milliseconds, the resulting vertical impulse arrests the
+descent and ejects the vehicle back into the air, where it recovers altitude
+and repeats the cycle.
+
+What makes this efficient is the contrast between the two media the hydrofoils
+move through.  Water is nearly three orders of magnitude denser than air, so
+the same hydrofoil, sweeping at the same speed, produces a far larger lift
+force during its brief submersion than it does while spinning in air.  The
+foils therefore impose almost no penalty on flight---they generate negligible
+aerodynamic lift as the vehicle hovers and spins---yet deliver a powerful
+upward impulse the instant they touch water.  This asymmetry allows each hop
+to recover a large fraction of the mechanical energy that would otherwise be
+spent climbing back out of the water, so the vehicle can sustain repeated hops
+on modest power rather than paying the full cost of a water takeoff at every
+bounce.
+
+The vehicle's continuous spin thus serves a dual purpose: it places the
+airframe in the relaxed-hover flight regime analysed in
+Chapter~\ref{chapter:papertwo}, and it supplies the tangential blade velocity
+that the hydrofoils require to generate lift on water contact.  The quantitative
+model of the submersion and ejection is developed in Chapter~\ref{dynamic}, and
+the physical realisation of the spinning airframe and its hydrofoils is
+presented in Chapter~\ref{chapter:paperone}.
+
 \section{Related Work}
+\label{sec:related_work}
+
+\paragraph{Aquatic--aerial robots.}
+Robots able to operate in both air and water have been pursued from several
+directions.  One line of work develops fixed-wing vehicles that plunge into
+the water and relaunch from it~\cite{??}, while another adapts rotorcraft to
+land on, float on, or dive beneath the surface~\cite{??}.  A third,
+bio-inspired line mimics animals such as ?? that transition between swimming
+and flight~\cite{??}.  Across these efforts, water contact is generally
+treated as a destination---a dive, a landing, or a sampling stop---and the
+return to the air is handled either by fully restarting flight or by a
+dedicated launch event.
+
+\paragraph{Leaving the water.}
+Departing the surface is the most demanding part of amphibious operation, and
+existing vehicles address it in energy-intensive ways.  Reported mechanisms
+include impulsive jumping~\cite{??}, rapid gas generation or
+combustion~\cite{??}, and simply oversizing the propulsion system to overcome
+surface adhesion and accelerate from rest~\cite{??}.  These approaches enable a
+single transition but are poorly suited to repeated water contact, because
+each takeoff consumes a large, non-recoverable share of the energy budget.
+
+\paragraph{Water-entry and skipping physics.}
+The physics of objects bouncing on water has been studied independently of
+robotics.  Stone-skipping and the related water-entry problem have been
+analysed for both spinning and non-spinning bodies~\cite{??}, establishing
+that a flat object striking water at a shallow angle experiences a large,
+short-lived hydrodynamic reaction that can redirect it upward before it
+sinks~\cite{??}.  These studies characterise the conditions for a successful
+skip---approach angle, speed, and spin---but consider passive, unpowered
+projectiles rather than a controlled, self-propelled vehicle.
+
+\paragraph{Spinning multirotors.}
+Multirotors that hover while spinning rapidly about their vertical axis have
+been studied as relaxed-hover platforms.  Mueller and D'Andrea characterise
+relaxed-hover solutions in which a multicopter sustains a constant spin rather
+than holding a fixed heading~\cite{mueller2016relaxed}, and the SplitFlyer
+vehicles realise a rotating multirotor whose attitude is governed by
+gyroscopic reduced-attitude dynamics~\cite{bai2020splitflyer,bai2022splitflyerair}.
+The flight control developed in this thesis operates in the same fast-spin
+regime; its role here is to keep the spinning airframe stable and controllable
+so that it can perform the water-skipping hop.
+
+\paragraph{Summary.}
+These bodies of work supply the individual ingredients---amphibious airframes,
+water-entry hydrodynamics, and control of fast-spinning multirotors---but none
+combines them into a vehicle that uses spinning hydrofoils to hop repeatedly
+across water while recovering much of the energy of each bounce.  That
+combination is the subject of this thesis.
 
 \section{Research Objectives}
 
