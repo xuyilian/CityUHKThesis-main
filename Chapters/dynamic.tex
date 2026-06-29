@@ -233,3 +233,32 @@ The vertical and rotational dynamics of the vehicle during water impact are then
 
 In this formulation the hydrofoil has no design chord length. Its geometric parameters are the root and tip radii $r_{\mathrm{root}}$ and $r_{\mathrm{tip}}$, which set the radial integration range $r_{\mathrm{root}} \le r \le r_{\mathrm{tip}}$, with the radial span $r_{\mathrm{tip}}-r_{\mathrm{root}}$ taken as the design variable, while the chordwise wetting is captured entirely by the submerged chord $c_{\mathrm{sub}} = z/\sin{\beta}$. This length grows with the penetration depth during contact and, by assumption, never reaches the physical extent of the foil, so there is always sufficient chord for the water to act on.
 \section{Simulation}
+\label{sec:simulation}
+
+The coupled vertical and rotational dynamics of~\eqref{eq:vertical_dynamics_function} and~\eqref{eq:rotational_dynamics_function} are integrated numerically through a single water contact. Starting from the instant the foils touch the surface, the state $(z,\dot{z},\omega)$ is advanced with a fixed-step semi-implicit Euler scheme until the foils leave the water---that is, until $z$ returns to the surface with an upward velocity. For a given entry condition (entry spin $\omega_0$ and downward entry velocity $\dot{z}_0$) and foil design (radial span and inclination $\beta$), the simulation returns the two quantities that characterise the hop: the exit spin $\omega_{\mathrm{exit}}$ and the exit vertical velocity $\dot{z}_{\mathrm{exit}}$.
+
+\paragraph{Anatomy of a hop.}
+Figure~\ref{fig:hop_time_history} shows a representative contact at the design point of interest. On entry the spinning foils generate a large upward hydrodynamic force that arrests the descent: the vertical velocity (red) decreases in magnitude, passes through zero at the deepest point of penetration (near $t\approx 8.5~\mathrm{ms}$), and reverses, ejecting the vehicle so that it leaves the water with $\dot{z}_{\mathrm{exit}}>0$ after a contact of roughly $27~\mathrm{ms}$. Throughout the contact the resisting torque bleeds the spin (blue), which falls from $\omega_0 = 3500~\mathrm{deg\,s^{-1}}$ to $\omega_{\mathrm{exit}}\approx 2000~\mathrm{deg\,s^{-1}}$---still well above the minimum spin $\omega_{\min}$ required by the controller.
+
+The reversal is markedly asymmetric: the descent is arrested in about $8.5~\mathrm{ms}$, but the climb back to the surface takes nearly twice as long and recovers only a fraction of the entry speed (here $\dot{z}_{\mathrm{exit}}\approx 0.75~\mathrm{m\,s^{-1}}$ against an entry of about $3~\mathrm{m\,s^{-1}}$). This is because the spin that powers the lift decays during the contact, so less upward force is available on the way out. The water contact is therefore not a conservative bounce; its role is to \emph{reverse the vertical velocity and return the vehicle to the air with controllable spin}, while the propellers restore the remaining energy during the subsequent flight phase.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.85\linewidth]{Assets/hop_time_history.png}
+    \caption{Simulated time history of a representative water contact at the design point. The vehicle enters at spin $\omega_0 = 3500~\mathrm{deg\,s^{-1}}$ and a downward velocity; the hydrodynamic force reverses the vertical velocity $\dot{z}$ (red, right axis) from descent to ascent, while the resisting torque reduces the spin $\omega$ (blue, left axis) to its exit value. The foils leave the water (dashed line) with $\dot{z}_{\mathrm{exit}}>0$ and $\omega_{\mathrm{exit}}$ still above the controller minimum $\omega_{\min}$.}
+    \label{fig:hop_time_history}
+\end{figure}
+
+\paragraph{Design space and the hop--spin trade-off.}
+Evaluating the model across the design space spanned by the inclination $\beta$, the radial span, and the entry velocity $\dot{z}_0$ shows how the two hop metrics depend on the design. Figure~\ref{fig:design_space_maps} plots every simulated design as a point in this space, coloured by the exit vertical velocity $\dot{z}_{\mathrm{exit}}$ (left, the hop) and by the exit spin $\omega_{\mathrm{exit}}$ (right, the retained spin).
+
+The two maps peak in different regions. The hop is largest at moderate inclination, large radial span, and a moderate entry velocity: too small an entry speed supplies little energy, while too large an entry speed drives the foils deep without a clean ejection. The retained spin, by contrast, is largest at small inclination and gentle entry, where the foils do the least work against the spin. Because every change that enlarges the hop---steeper $\beta$, larger span, or faster entry---also loads the foils more heavily and bleeds more spin, the two objectives are in direct opposition.
+
+This trade-off defines the design problem: maximise the hop subject to the exit spin remaining above the controllable minimum. The feasible optimum therefore lies at a compromise---moderate inclination and large span---where the hop is near its peak while the exit spin is still comfortably retained. The geometry and operating point selected on this basis are detailed in Chapter~\ref{chapter:paperone}.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{Assets/design_space_maps.png}
+    \caption{Hop performance over the design space $(\beta,\ \mathrm{span},\ \dot{z}_0)$. Each point is one simulated design, coloured by the exit vertical velocity $\dot{z}_{\mathrm{exit}}$ (left, the hop) and by the exit spin $\omega_{\mathrm{exit}}$ (right, the retained spin). The hop and the retained spin peak in different regions of the space, exposing the trade-off between a large hop and a controllable exit spin.}
+    \label{fig:design_space_maps}
+\end{figure}
