@@ -29,6 +29,56 @@ the body frame is $\boldsymbol{\omega} = [\omega_x, \omega_y, \omega_z]^{\top}$.
 The yaw angle $\psi$ is defined as the rotation of $\hat{x}^b$ about
 $\hat{z}^w$ relative to $\hat{x}^w$.
 
+\begin{figure}[t]
+    \centering
+    \begin{tikzpicture}[>=Latex,line width=0.9pt]
+        % projection basis (2D images of body unit vectors):
+        %   xb=(-0.80,-0.50), yb=(0.80,-0.50), zb=(0,1)
+        \coordinate (O) at (0,0);
+        \coordinate (A) at (1.76,-1.10);   % +yb rotor
+        \coordinate (B) at (-1.76,-1.10);  % +xb rotor
+        \coordinate (C) at (-1.76,1.10);   % -yb rotor
+        \coordinate (D) at (1.76,1.10);    % -xb rotor
+        % arms
+        \foreach \h in {A,B,C,D}{\draw[gray!55,line width=2pt] (O)--(\h);}
+        % rotor disks
+        \foreach \h in {A,B,C,D}{\draw[fill=gray!12] (\h) ellipse[x radius=0.62,y radius=0.26];}
+        % per-rotor thrust (up, blue)
+        \foreach \h in {A,B,C,D}{\draw[blue,->,line width=1pt] (\h)--($(\h)+(0,1.05)$);}
+        \node[blue,anchor=south] at ($(A)+(0,1.05)$){$f_i$};
+        % weight
+        \draw[blue,->,line width=1.1pt] (O)--(0,-2.05) node[right,black]{$mg$};
+        % body frame
+        \draw[->] (O)--(0,2.35) node[above]{$\hat{z}^b$};
+        \draw[->] (O)--(-1.04,-0.65) node[below left]{$\hat{x}^b$};
+        \draw[->] (O)--(1.04,-0.65) node[below right]{$\hat{y}^b$};
+        \fill (O) circle (2.2pt);
+        \node[anchor=south west] at (0.08,0.06){$\mathcal{B}$};
+        % spin about z
+        \draw[orange,->,line width=1pt]
+            (0.5,2.0) arc[start angle=-15,end angle=210,x radius=0.5,y radius=0.2];
+        \node[orange] at (1.2,2.05){$\omega_z$};
+        % arm length
+        \draw[<->,line width=0.6pt] ($(O)+(0.12,-0.18)$)--($(A)+(0.12,-0.18)$);
+        \node[anchor=north] at ($(O)!0.5!(A)+(0.18,-0.20)$){$l$};
+        % world frame
+        \begin{scope}[shift={(4.7,-1.4)},line width=0.7pt]
+            \draw[->] (0,0)--(0,0.9) node[above]{$\hat{z}^w$};
+            \draw[->] (0,0)--(-0.72,-0.45) node[below left]{$\hat{x}^w$};
+            \draw[->] (0,0)--(0.72,-0.45) node[below right]{$\hat{y}^w$};
+            \node[anchor=south west] at (0.06,0.05){$\mathcal{W}$};
+        \end{scope}
+    \end{tikzpicture}
+    \caption{Free-body schematic of the spinning quadrotor (first draft). Each
+    of the four rotors produces a thrust $f_i$ along the body axis $\hat{z}^b$;
+    the vehicle spins at yaw rate $\omega_z$ about $\hat{z}^b$, $mg$ is the
+    weight at the centre of mass $\mathcal{B}$, and $l$ is the arm length.
+    $(\hat{x}^b,\hat{y}^b,\hat{z}^b)$ is the body frame and $\mathcal{W}$ the
+    inertial frame. Torque terms and rotor spin senses to be added once the
+    rotor convention is fixed.}
+    \label{fig:vehicle_fbd}
+\end{figure}
+
 \paragraph{Non-revolving frame.}
 Because the vehicle spins at high yaw rate, a non-revolving intermediate
 frame $(\hat{x}^m, \hat{y}^m, \hat{z}^b)$ is introduced to describe the
