@@ -31,51 +31,74 @@ $\hat{z}^w$ relative to $\hat{x}^w$.
 
 \begin{figure}[t]
     \centering
-    \begin{tikzpicture}[>=Latex,line width=0.9pt]
-        % projection basis (2D images of body unit vectors):
-        %   xb=(-0.80,-0.50), yb=(0.80,-0.50), zb=(0,1)
-        \coordinate (O) at (0,0);
-        \coordinate (A) at (1.76,-1.10);   % +yb rotor
-        \coordinate (B) at (-1.76,-1.10);  % +xb rotor
-        \coordinate (C) at (-1.76,1.10);   % -yb rotor
-        \coordinate (D) at (1.76,1.10);    % -xb rotor
-        % arms
-        \foreach \h in {A,B,C,D}{\draw[gray!55,line width=2pt] (O)--(\h);}
-        % rotor disks
-        \foreach \h in {A,B,C,D}{\draw[fill=gray!12] (\h) ellipse[x radius=0.62,y radius=0.26];}
-        % per-rotor thrust (up, blue)
-        \foreach \h in {A,B,C,D}{\draw[blue,->,line width=1pt] (\h)--($(\h)+(0,1.05)$);}
-        \node[blue,anchor=south] at ($(A)+(0,1.05)$){$f_i$};
-        % weight
-        \draw[blue,->,line width=1.1pt] (O)--(0,-2.05) node[right,black]{$mg$};
-        % body frame
-        \draw[->] (O)--(0,2.35) node[above]{$\hat{z}^b$};
-        \draw[->] (O)--(-1.04,-0.65) node[below left]{$\hat{x}^b$};
-        \draw[->] (O)--(1.04,-0.65) node[below right]{$\hat{y}^b$};
-        \fill (O) circle (2.2pt);
-        \node[anchor=south west] at (0.08,0.06){$\mathcal{B}$};
-        % spin about z
-        \draw[orange,->,line width=1pt]
-            (0.5,2.0) arc[start angle=-15,end angle=210,x radius=0.5,y radius=0.2];
-        \node[orange] at (1.2,2.05){$\omega_z$};
-        % arm length
-        \draw[<->,line width=0.6pt] ($(O)+(0.12,-0.18)$)--($(A)+(0.12,-0.18)$);
-        \node[anchor=north] at ($(O)!0.5!(A)+(0.18,-0.20)$){$l$};
-        % world frame
-        \begin{scope}[shift={(4.7,-1.4)},line width=0.7pt]
-            \draw[->] (0,0)--(0,0.9) node[above]{$\hat{z}^w$};
-            \draw[->] (0,0)--(-0.72,-0.45) node[below left]{$\hat{x}^w$};
-            \draw[->] (0,0)--(0.72,-0.45) node[below right]{$\hat{y}^w$};
-            \node[anchor=south west] at (0.06,0.05){$\mathcal{W}$};
+    \definecolor{forceblue}{RGB}{22,92,170}
+    \definecolor{torqueora}{RGB}{221,116,24}
+    \definecolor{flaggold}{RGB}{228,180,60}
+    \definecolor{foildark}{RGB}{46,46,54}
+    \begin{tikzpicture}[>=Latex,line width=0.9pt,font=\small]
+        % ---- 3/4 view from above-front: rotor hubs form a trapezoid ----
+        \coordinate (O)  at (0,0);
+        \coordinate (FR) at (2.30,-0.85);
+        \coordinate (FL) at (-2.30,-0.85);
+        \coordinate (BR) at (1.55,0.55);
+        \coordinate (BL) at (-1.55,0.55);
+        \coordinate (Bh) at (0,-0.72);
+        % ---- hydrofoils (black blades, underside) ----
+        \draw[foildark,line width=2.2pt] (O)--(Bh);
+        \foreach \tp in {{(2.00,-1.52)},{(-2.00,-1.52)},{(1.30,-0.38)},{(-1.30,-0.38)}}{
+            \draw[foildark,line width=3.2pt] (Bh)--\tp;
+            \fill[foildark] \tp ellipse[x radius=0.44,y radius=0.14];
+        }
+        % ---- arms ----
+        \foreach \h in {FR,FL,BR,BL}{\draw[black!45,line width=2.2pt] (O)--(\h);}
+        % ---- central hub ----
+        \fill[black!72,rounded corners=1.5pt] (-0.34,-0.22) rectangle (0.34,0.22);
+        % ---- rotor disks + per-rotor thrust ----
+        \foreach \h in {FR,FL,BR,BL}{
+            \draw[draw=black!55,fill=black!10] (\h) ellipse[x radius=0.74,y radius=0.30];
+            \draw[forceblue,->,line width=1.05pt] (\h)--($(\h)+(0,0.98)$);
+        }
+        \node[forceblue,anchor=south] at ($(FL)+(0,0.98)$){$t_{p,i}$};
+        % rotor spin sense (all four CCW), shown on the near-right rotor
+        \draw[torqueora,->,line width=0.8pt]
+            ($(FR)+(0.40,0.02)$) arc[start angle=8,end angle=300,x radius=0.40,y radius=0.17];
+        % ---- drag flags (gold, on the spin axis) ----
+        \fill[flaggold,draw=black!60] (-0.05,0.70)--(-0.92,1.00)--(-0.92,1.42)--(-0.05,1.12)--cycle;
+        \fill[flaggold,draw=black!60] (0.05,0.70)--(0.92,1.00)--(0.92,1.42)--(0.05,1.12)--cycle;
+        % ---- body frame / spin axis (z up through the mast) ----
+        \draw[->,line width=1pt] (O)--(0,2.05) node[above]{$\hat{z}$};
+        \draw[->,line width=1pt] (O)--(1.06,-0.36) node[right]{$\hat{x}$};
+        \draw[->,line width=1pt] (O)--(-1.06,-0.36) node[left]{$\hat{y}$};
+        \node[anchor=south west] at (0.15,0.28){$\mathcal{B}$};
+        % ---- weight ----
+        \draw[forceblue,->,line width=1.3pt] (O)--(0,-2.15);
+        \node[forceblue,anchor=west] at (0.10,-1.95){$mg$};
+        % ---- body spin (CW, driven by the CCW rotors) ----
+        \draw[torqueora,->,line width=1.2pt]
+            (-0.62,1.72) arc[start angle=200,end angle=-20,x radius=0.62,y radius=0.24];
+        \node[torqueora,anchor=east] at (-0.68,1.72){$\Omega$};
+        % ---- arm length ----
+        \draw[<->,line width=0.6pt] ($(O)+(0.04,0.30)$)--($(BR)+(0.04,0.30)$);
+        \node[anchor=south] at ($(O)!0.5!(BR)+(0.04,0.32)$){$r_m$};
+        % ---- world frame ----
+        \begin{scope}[shift={(5.0,-1.5)},line width=0.8pt]
+            \draw[->] (0,0)--(0,0.95) node[above]{$\hat{Z}$};
+            \draw[->] (0,0)--(0.72,-0.42) node[right]{$\hat{X}$};
+            \draw[->] (0,0)--(-0.72,-0.42) node[left]{$\hat{Y}$};
+            \node[anchor=south west] at (0.06,0.06){$\mathcal{W}$};
         \end{scope}
     \end{tikzpicture}
-    \caption{Free-body schematic of the spinning quadrotor (first draft). Each
-    of the four rotors produces a thrust $f_i$ along the body axis $\hat{z}^b$;
-    the vehicle spins at yaw rate $\omega_z$ about $\hat{z}^b$, $mg$ is the
-    weight at the centre of mass $\mathcal{B}$, and $l$ is the arm length.
-    $(\hat{x}^b,\hat{y}^b,\hat{z}^b)$ is the body frame and $\mathcal{W}$ the
-    inertial frame. Torque terms and rotor spin senses to be added once the
-    rotor convention is fixed.}
+    \caption{Free-body schematic of the water-skipping quadrotor (draft). The
+    four rotors all spin counter-clockwise, producing thrusts $t_{p,i}$ along
+    the body axis $\hat{z}$; their common aerodynamic reaction drives the
+    airframe to spin clockwise at the relaxed-hover yaw rate $\Omega$. The gold
+    drag flags on the upper mast raise the yaw drag so that $\Omega$ stays
+    within the control-loop bandwidth, while the black hydrofoils on the
+    underside generate the hydrodynamic impulse on water contact. $mg$ is the
+    weight at the centre of mass $\mathcal{B}$, $r_m$ the arm length,
+    $(\hat{x},\hat{y},\hat{z})$ the body frame, and $\mathcal{W}$ the inertial
+    frame. Net thrust and torque terms will be added to match the reference
+    layout.}
     \label{fig:vehicle_fbd}
 \end{figure}
 
