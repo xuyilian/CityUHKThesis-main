@@ -99,18 +99,13 @@ Each hydrofoil is a thin flat plate, chosen for simplicity of fabrication and
 because the flat-plate hydrodynamic model (lift coefficient
 $C_L = 2\sin\alpha\cos\alpha$, drag coefficient $C_D = 2\sin^2\alpha$)
 provides a closed-form basis for the blade-element simulation of
-Chapter~\ref{chapter:dynamic}.  The foil extends radially inward from the tip
-radius $r_\mathrm{tip} = r_f = 70\;\mathrm{mm}$ and is parametrised by its
-planform area $S_f$ and chord $c_f$ (the dimension tangential to the sweep
-direction); for a rectangular foil the radial span is $S_f/c_f$, so the root
-radius is
-\begin{equation}
-    r_\mathrm{root} = r_\mathrm{tip} - \frac{S_f}{c_f}.
-    \label{eq:foil_root}
-\end{equation}
-The fabricated hydrofoil has chord $c_f = 10\;\mathrm{mm}$ and radial span
-$30\;\mathrm{mm}$, giving a planform area $S_f = 300\;\mathrm{mm}^2$ and, from
-\eqref{eq:foil_root}, a root radius $r_\mathrm{root} = 40\;\mathrm{mm}$.
+Chapter~\ref{chapter:dynamic}.  The foil extends radially outward from the
+axis of rotation to the tip radius $r_\mathrm{tip} = r_f = 70\;\mathrm{mm}$,
+so its radial span equals $r_\mathrm{tip}$, and it is parametrised by its
+chord $c_f$ (the dimension tangential to the sweep direction).  The
+fabricated hydrofoil has chord $c_f = 10\;\mathrm{mm}$ and radial span
+$70\;\mathrm{mm}$, giving a rectangular planform area
+$S_f = c_f\, r_\mathrm{tip} = 700\;\mathrm{mm}^2$.
 
 \paragraph{Attack angle as the design variable.}
 The hydrofoil is mounted at a fixed attack angle $\beta$ relative to the
