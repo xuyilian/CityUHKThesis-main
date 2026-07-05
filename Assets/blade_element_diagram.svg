@@ -24,9 +24,9 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showgrid="true"
-     inkscape:zoom="0.70710678"
-     inkscape:cx="497.80317"
-     inkscape:cy="218.49599"
+     inkscape:zoom="1"
+     inkscape:cx="671"
+     inkscape:cy="118.5"
      inkscape:window-width="1920"
      inkscape:window-height="991"
      inkscape:window-x="-9"
@@ -676,7 +676,7 @@
        y="37.281563">x</tspan></text>
   <g
      id="g1"
-     transform="translate(81.320099,-91.882363)">
+     transform="translate(80.234071,-93.180829)">
     <text
        xml:space="preserve"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.17222px;font-family:Cambria;-inkscape-font-specification:'Cambria Italic';text-align:start;letter-spacing:0px;writing-mode:lr-tb;direction:ltr;text-anchor:start;opacity:1;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.05833;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
@@ -883,4 +883,16 @@
        style="font-size:9.17222px;stroke-width:1.05833"
        x="290.03134"
        y="38">z</tspan></text>
+  <circle
+     style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.79375;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     id="path107"
+     cx="284.99997"
+     cy="30.000002"
+     r="0.47369051" />
+  <circle
+     style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.79375;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     id="path108"
+     cx="104.99999"
+     cy="30.000002"
+     r="0.43999034" />
 </svg>
