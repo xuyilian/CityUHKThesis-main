@@ -122,3 +122,41 @@ spin-frequency artifact from the state estimate seen by the controller.
 \section{Constant-Height Jumping on Water}
 
 \section{Experimental Results}
+
+% TODO(text): section prose. Figures are being placed first so the analysis
+% is written against the plots that will actually appear.
+
+\subsection{Anatomy of a single hop}
+
+Figure~\ref{fig:hop_single} shows one hop in isolation.  From a hover at
+$0.94\;\mathrm{m}$ the lift rotors are commanded to zero thrust and the
+vehicle falls freely to the water surface, reaching
+$-1.55\;\mathrm{m\,s^{-1}}$ at entry.  The foils remain in the water for
+$106\;\mathrm{ms}$, during which the vehicle descends a further
+$86\;\mathrm{mm}$, reverses, and leaves the surface climbing at
+$+0.92\;\mathrm{m\,s^{-1}}$.  The peak upward acceleration during the
+contact is $4.9\,g$.  Throughout the fall, the contact, and the ejection the
+lift rotors carry no command: the reversal is produced by the hydrofoils
+alone.
+% TODO(text): expand -- relate to the simulated contact duration and exit
+% velocity of Ch.2 once simu.m has been re-run at as-built parameters.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.72\linewidth]{Assets/ch5fig1_single_hop.pdf}
+    \caption{A single water-skipping hop, with the lift rotors commanded
+    off throughout.  \textbf{(A)}~Height.  The vehicle is released from a
+    hover at $0.94\;\mathrm{m}$, descends to $0.52\;\mathrm{m}$, and has
+    recovered to $0.61\;\mathrm{m}$ by the time the foils leave the water.
+    \textbf{(B)}~Vertical velocity.  The shaded band marks the water
+    contact, bounded by the two turning points of the velocity trace: entry
+    at $-1.55\;\mathrm{m\,s^{-1}}$, where the descent stops steepening, and
+    exit at $+0.92\;\mathrm{m\,s^{-1}}$, where the water ceases to add
+    upward speed.  \textbf{(C)}~Commanded lift thrust, as a percentage of
+    full scale.  The command is cut from its hover value to zero before the
+    descent and remains there through the contact and ejection; the bar
+    marks the unpowered interval.  Control is restored shortly before the
+    apex at a thrust-to-weight ratio below $0.35$, which cannot support the
+    vehicle and is omitted from the trace for clarity.}
+    \label{fig:hop_single}
+\end{figure}

@@ -39,13 +39,18 @@ Section~\ref{sec:water_skipping_mechanism}.
 \section{Water-Skipping Mechanism}
 \label{sec:water_skipping_mechanism}
 
-The vehicle is a quadrotor whose four rotors all spin in the same direction.
-Because their aerodynamic reaction torques do not cancel, the airframe itself
-rotates continuously about its vertical axis during flight, settling at a
-constant spin rate.  Mounted beneath the body, one under each arm, are four
-hydrofoils that rotate rigidly with the airframe; as the vehicle spins, each
-hydrofoil sweeps through a circular path at a tangential speed set by the spin
-rate and its radius from the centre.
+The vehicle is a four-rotor airframe that rotates continuously about its
+vertical axis during flight.  Two of its rotors are mounted horizontally,
+tangential to the frame, and drive this rotation directly; the remaining two
+are mounted vertically and provide lift and attitude authority, their
+aerodynamic reaction torque adding to the rotation rather than cancelling it.
+Because the tangential rotors are commanded independently of the lift channel,
+the spin rate is a quantity the vehicle sets rather than one it settles into.
+Extending from each of the four motor mounts is a leg that drops below the
+airframe and then turns outward into a hydrofoil, so that the four hydrofoils
+rotate rigidly with the body; as the vehicle spins, each sweeps through a
+circular path at a tangential speed set by the spin rate and its radius from
+the centre.
 
 A single hop proceeds in three phases.  The vehicle first climbs and then
 enters a brief free-fall, descending toward a still water surface.  At contact
@@ -68,16 +73,26 @@ spent climbing back out of the water, so the vehicle can sustain repeated hops
 on modest power rather than paying the full cost of a water takeoff at every
 bounce.
 
-The vehicle's continuous spin thus serves a dual purpose: it places the
-airframe in the relaxed-hover flight regime analysed in
-Chapter~\ref{chapter:papertwo}, and it supplies the tangential blade velocity
-that the hydrofoils require to generate lift on water contact.  The quantitative
-model of the submersion and ejection is developed in Chapter~\ref{dynamic}, and
-the physical realisation of the spinning airframe and its hydrofoils is
-presented in Chapter~\ref{chapter:paperone}.
+The vehicle's continuous spin thus serves a dual purpose: it supplies the
+tangential blade velocity that the hydrofoils require to generate lift on water
+contact, and it places the airframe in the fast-rotating flight regime analysed
+in Chapter~\ref{chapter:papertwo}, where the spin dominates the attitude
+dynamics and the vehicle must be controlled as a rotating body.  Because the
+spin rate is commanded rather than passively determined, it can be treated as a
+design parameter---tuned to whatever tangential blade speed the hop requires.
+The quantitative model of the submersion and ejection is developed in
+Chapter~\ref{dynamic}, and the physical realisation of the spinning airframe and
+its hydrofoils is presented in Chapter~\ref{chapter:paperone}.
 
 \section{Related Work}
 \label{sec:related_work}
+
+% TODO(citations): every \cite{??} below is an unresolved placeholder.
+% References/references.bib currently holds only three real entries
+% (bai2020splitflyer, bai2022splitflyerair, mueller2016relaxed); the rest are
+% example-reference-N boilerplate. Needs: amphibious aerial robots, water
+% takeoff/launch mechanisms, stone-skipping & water-entry physics (Bocquet).
+% The prose is written and does not depend on which sources are chosen.
 
 \paragraph{Aquatic--aerial robots.}
 Robots able to operate in both air and water have been pursued from several
@@ -111,14 +126,20 @@ projectiles rather than a controlled, self-propelled vehicle.
 
 \paragraph{Spinning multirotors.}
 Multirotors that hover while spinning rapidly about their vertical axis have
-been studied as relaxed-hover platforms.  Mueller and D'Andrea characterise
-relaxed-hover solutions in which a multicopter sustains a constant spin rather
-than holding a fixed heading~\cite{mueller2016relaxed}, and the SplitFlyer
-vehicles realise a rotating multirotor whose attitude is governed by
-gyroscopic reduced-attitude dynamics~\cite{bai2020splitflyer,bai2022splitflyerair}.
-The flight control developed in this thesis operates in the same fast-spin
-regime; its role here is to keep the spinning airframe stable and controllable
-so that it can perform the water-skipping hop.
+been studied for some time.  Mueller and D'Andrea characterise relaxed-hover
+solutions in which a multicopter sustains a constant spin rather than holding a
+fixed heading~\cite{mueller2016relaxed}, and the SplitFlyer vehicles realise a
+rotating multirotor whose attitude is governed by gyroscopic reduced-attitude
+dynamics~\cite{bai2020splitflyer,bai2022splitflyerair}.  In these platforms the
+spin arises as a consequence of the actuator configuration: yaw torque cannot
+be independently cancelled, and the vehicle settles at whatever rate balances
+that residual torque.  The vehicle described here shares the fast-spin regime
+and the reduced-attitude dynamics that come with it, but reaches it by
+different means---dedicated tangential rotors drive the rotation directly, so
+the spin rate is commanded rather than inherited from the thrust balance.  This
+matters because the hop depends on the tangential speed of the hydrofoils at
+water contact: a spin rate that can be set is a design variable, not a
+constraint to be worked around.
 
 \paragraph{Summary.}
 These bodies of work supply the individual ingredients---amphibious airframes,
@@ -128,21 +149,107 @@ across water while recovering much of the energy of each bounce.  That
 combination is the subject of this thesis.
 
 \section{Research Objectives}
+\label{sec:research_objectives}
+
+The goal of this thesis is to establish water-skipping as a practical mode of
+locomotion for a micro aerial vehicle: to show that a small rotorcraft can
+strike a water surface and be thrown back into the air by its own spinning
+hydrofoils, and that it can do so repeatedly under closed-loop control.  This
+goal breaks into four objectives.
+
+\begin{enumerate}
+  \item \textbf{Model the hop.}  Develop a quantitative model of the brief
+    submersion phase that predicts the vertical impulse delivered to the
+    vehicle as a function of the hydrofoil geometry, its attack angle, the spin
+    rate at contact, and the descent velocity.  The model must be tractable
+    enough to guide design decisions and to indicate which parameters dominate
+    the outcome.
+
+  \item \textbf{Design a vehicle that can survive and exploit the hop.}
+    Realise an airframe that carries the hydrofoils at a useful radius, spins
+    fast enough to give them the tangential speed the model requires, tolerates
+    repeated water impact, and remains light enough to be ejected by the
+    impulse its own foils generate.
+
+  \item \textbf{Control a fast-spinning vehicle.}  Establish attitude and
+    position control for an airframe rotating continuously about its vertical
+    axis, where the spin dominates the attitude dynamics and the vehicle must
+    be regulated as a rotating body rather than a heading-holding one.  The
+    controller must hold station well enough to place the vehicle over a chosen
+    point, execute a controlled descent onto the surface, and recover the
+    vehicle after ejection.
+
+  \item \textbf{Demonstrate the cycle experimentally.}  Show on hardware that
+    the full sequence---hover, descend, contact, eject, recover---closes, and
+    that the vehicle returns to controlled flight after water contact rather
+    than merely surviving a single impact.
+\end{enumerate}
 
 \section{Thesis Contributions}
+\label{sec:thesis_contributions}
+
+The contributions of this thesis are as follows.
+
+\begin{itemize}
+  \item \textbf{A water-skipping locomotion mode for MAVs.}  The central
+    contribution is the locomotion mode itself: a rotorcraft that hops across
+    water on spinning hydrofoils, exploiting the density contrast between air
+    and water so that the foils cost the vehicle little in flight yet deliver a
+    large impulse during a contact lasting a few milliseconds.  This treats
+    water contact as a repeatable means of travel rather than as a landing, a
+    dive, or a sampling stop.
+
+  \item \textbf{A blade-element model of hydrofoil-driven ejection.}  A
+    quasi-steady blade-element model of the submersion phase
+    (Chapter~\ref{dynamic}) that predicts ejection velocity from foil geometry,
+    attack angle, spin rate, and impact conditions, and identifies the
+    parameters that govern whether a hop succeeds.
+
+  \item \textbf{A spinning airframe with an independently commanded spin rate.}
+    A vehicle design (Chapter~\ref{chapter:paperone}) in which two tangentially
+    mounted rotors drive the rotation directly while two vertically mounted
+    rotors provide lift and attitude authority.  Decoupling the spin from the
+    lift channel turns the spin rate into a commanded design parameter, allowing
+    the tangential blade speed at water contact to be set to what the hop
+    requires.
+
+  \item \textbf{Flight control at high spin rates.}  A control formulation and
+    implementation (Chapter~\ref{chapter:papertwo}) that keeps the vehicle
+    stable and position-controllable while spinning, together with an online
+    method for separating the spin-synchronous artefact from the estimated
+    attitude (Chapter~\ref{chapter:paperthree}).  In flight testing the vehicle
+    remained controllable at spin rates approaching
+    $10{,}000^{\circ}\,\mathrm{s^{-1}}$ without an upper limit being reached.
+
+  \item \textbf{Experimental demonstration of repeated hops.}  Flight
+    experiments (Chapter~\ref{chapter:paperthree}) demonstrating hops on a still
+    water surface, including sequences in which the vehicle regains controlled
+    flight after contact and returns toward its commanded height.
+\end{itemize}
 
 \section{Thesis Organization}
 
 The remainder of this thesis is organized as follows:
 
-\textbf{Chapter~\ref{chapter:background}} provides essential background information on [research domain], including historical context, current state-of-the-art, and key challenges that motivate this work.
+\textbf{Chapter~\ref{dynamic}} develops the hydrodynamic model of the hop.  A
+quasi-steady blade-element treatment of the submersion phase predicts the
+forces generated by the hydrofoils as they sweep through the water, and
+establishes how the resulting ejection depends on foil geometry, attack angle,
+spin rate, and impact velocity.
 
-\textbf{Chapter~\ref{chapter:paperone}} presents our first major contribution: [brief description of paper one]. This chapter introduces [key concept 1] and demonstrates its effectiveness through comprehensive evaluation.
+\textbf{Chapter~\ref{chapter:paperone}} presents the design of the vehicle: the
+airframe and its rotor configuration, the propulsion and power system, and the
+geometry of the hydrofoils that carry out the hop.
 
-\textbf{Chapter~\ref{chapter:papertwo}} describes our second major contribution: [brief description of paper two]. This work builds upon the foundation established in Chapter~\ref{chapter:paperone} and addresses [specific problem area].
+\textbf{Chapter~\ref{chapter:papertwo}} develops the flight dynamics and
+control of the spinning airframe, covering the coordinate frames and system
+definition, the translational and attitude dynamics, the reduced dynamics that
+apply under high yaw rate, and the controller built on them.
 
-\textbf{Chapter~\ref{chapter:paperthree}} presents our third major contribution: [brief description of paper three]. This chapter integrates the previous contributions into a unified framework and demonstrates its effectiveness in real-world scenarios.
+\textbf{Chapter~\ref{chapter:paperthree}} reports the experimental validation.
+It describes the flight testing setup, an online method for separating
+rotation-induced oscillations from the state estimate, and flight results for
+constant-height jumping on water.
 
-\textbf{Chapter~\ref{chapter:relatedwork}} provides a comprehensive survey of related work in [research domain], positioning our contributions within the broader research landscape.
-
-\textbf{Chapter~\ref{chapter:conclusion}} summarizes the key contributions of this thesis, discusses their implications, and outlines promising directions for future research.
+\textbf{Chapter~\ref{chapter:conclusion}} summarizes the contributions of this
+thesis, discusses their implications, and outlines directions for future work.
