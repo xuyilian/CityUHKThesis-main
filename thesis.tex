@@ -88,7 +88,20 @@
 
 % ================================ DEVELOPMENT HELPERS ==============================
 \newcommand{\fixme}[1]{\textcolor{red}{#1}}
-% \newcommand{\todo}[1]{\textcolor{blue}{\textbf{TODO:} #1}} % Uncomment if needed
+\newcommand{\todo}[1]{\textcolor{blue}{\textbf{TODO:} #1}}
+
+% Block-level placeholder for work not yet written. Renders as a boxed,
+% clearly visible note so gaps are obvious in the compiled draft.
+% Delete the whole \todobox{...} when the section is written.
+% NOTE: only basic colour names are used here. hyperref pulls in `color`,
+% not `xcolor`, so the `blue!40` shading syntax is unavailable.
+\newcommand{\todobox}[2]{%
+  \par\medskip\noindent
+  \fbox{%
+    \parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}{%
+      \textcolor{blue}{\textbf{TO BE WRITTEN: #1}}\\[3pt]
+      \small\textcolor{blue}{#2}}}%
+  \par\medskip}
 
 % ================================ XETEX SETTINGS ===================================
 \XeTeXgenerateactualtext=1

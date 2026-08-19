@@ -200,6 +200,13 @@ The filtered estimates $\hat A_{13}$ and $\hat A_{23}$ replace the raw $R_{13}$
 and $R_{23}$ in the attitude feedback loop, effectively removing the
 spin-frequency artifact from the state estimate seen by the controller.
 
+\todobox{figure: the spin-artefact filter acting on flight data}{%
+Raw $R_{13}$ and $R_{23}$ against their filtered estimates over a few
+seconds of hover, showing the spin-frequency oscillation present in the raw
+signals and absent from the filtered ones. All four traces are already
+logged, so this needs no new experiment. It is the figure that demonstrates
+the method of this section actually works in flight.}
+
 \section{Constant-Height Jumping on Water}
 \label{sec:constant_height_jumping}
 
@@ -211,8 +218,7 @@ so that successive contacts occur under nominally identical conditions.
 \paragraph{The hop cycle.}
 One cycle proceeds through four stages.  The vehicle first holds position at a
 commanded height above the water under the controller of
-Chapter~\ref{chapter:papertwo}.  The lift command is then removed---both lift
-rotors are commanded to zero thrust---and the vehicle descends unpowered onto
+Chapter~\ref{chapter:papertwo}.  The lift command is then removed (both lift rotors are commanded to zero thrust) and the vehicle descends unpowered onto
 the surface.  Throughout this descent the tangential rotors remain at their
 fixed setpoint, so the hydrofoils arrive at the water still sweeping at close
 to their hover speed; this is the property that makes an unpowered descent
@@ -235,8 +241,8 @@ Re-engaging the controller at the right instant is the practical difficulty in
 closing the cycle.  Too early and the controller fights the contact; too late
 and the vehicle has already fallen back.  Rather than time the transition
 open-loop, it is triggered from the measured motion.  The vehicle is armed
-once a genuine descent is detected---the filtered vertical velocity falling
-below a threshold---and the transition fires when that velocity reverses and
+once a genuine descent is detected (the filtered vertical velocity falling
+below a threshold), and the transition fires when that velocity reverses and
 the vehicle is rising while still close to the surface.  Both conditions must
 be met, so that neither a slow drift nor a spurious velocity excursion can
 trigger a handover.
@@ -268,8 +274,6 @@ it exists so that a tracking dropout costs one hop rather than the flight.
 \section{Experimental Results}
 \label{sec:exp_results}
 
-% TODO(text): section prose. Figures are being placed first so the analysis
-% is written against the plots that will actually appear.
 
 \subsection{Anatomy of a single hop}
 
@@ -283,8 +287,14 @@ $+0.92\;\mathrm{m\,s^{-1}}$.  The peak upward acceleration during the
 contact is $4.9\,g$.  Throughout the fall, the contact, and the ejection the
 lift rotors carry no command: the reversal is produced by the hydrofoils
 alone.
-% TODO(text): expand -- relate to the simulated contact duration and exit
-% velocity of Ch.2 once simu.m has been re-run at as-built parameters.
+\todobox{comparison with the model of Chapter~\ref{dynamic}}{%
+Place the measured contact duration and exit velocity beside the values the
+blade-element model predicts at the same entry conditions, and state the size
+of the discrepancy. The model predicts a markedly shorter and harder contact
+than is observed, consistent with the free surface deforming away from the
+foils rather than remaining flat. Two or three sentences; the limitation is
+already stated in Chapter~\ref{chapter:conclusion} and need not be repeated
+at length.}
 
 \begin{figure}[t]
     \centering
@@ -305,6 +315,36 @@ alone.
     vehicle and is omitted from the trace for clarity.}
     \label{fig:hop_single}
 \end{figure}
+
+\subsection{Repeated hops at constant height}
+
+\todobox{the two-hop sequence}{%
+Written against the primary analysis case, \texttt{stable2hop}. Should show
+the full cycle closing twice: hover, unpowered descent, contact, ejection,
+recovery to the commanded height, and a second descent from that height.
+Report the height returned to between hops and how closely the second
+contact reproduces the first. A figure of height, vertical velocity and lift
+command across both hops is to be generated from the flight log.}
+
+\subsection{Consistency across flights}
+
+\todobox{hop-to-hop repeatability}{%
+Entry velocity, exit velocity, contact duration and spin retention across
+all reported cases, as a table or a scatter of exit against entry velocity.
+Establishes that the hop is repeatable rather than a single fortunate event.
+Measured ranges: entry $-1.55$ to $-1.87\;\mathrm{m\,s^{-1}}$, exit $+0.17$
+to $+0.53\;\mathrm{m\,s^{-1}}$, contact $42$--$106\;\mathrm{ms}$, and about
+$40\%$ of the entry spin retained.}
+
+\subsection{Limits of the measurement}
+
+\todobox{the tracking dropout at the splash}{%
+One short, factual paragraph. Longer hop sequences were prevented by loss of
+motion-capture tracking when water is thrown across the markers, not by any
+limitation of the vehicle or the controller. State it once, note the
+mitigation described in Section~\ref{sec:constant_height_jumping}, and move
+on. Do not treat it as a failed result, and do not let it grow into a
+section.}
 % =====================================================================
 % FIGURE SLOT 5.5 -- COMPOSITE MULTI-EXPOSURE OF A HOP  [you supply]
 % Extract frames from one hop video and overlay them into a single image so

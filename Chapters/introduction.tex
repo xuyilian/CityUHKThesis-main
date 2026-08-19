@@ -7,7 +7,7 @@
 Micro aerial vehicles (MAVs) have become capable platforms for environmental
 monitoring, search and rescue, and inspection, yet the overwhelming majority
 operate exclusively in the air.  Many of the environments where small robots
-are most useful---rivers, lakes, flooded terrain, and coastal zones---are
+are most useful (rivers, lakes, flooded terrain, and coastal zones) are
 dominated by water, and a vehicle confined to flight must expend continuous
 power to remain aloft above them.  Extending an MAV's mobility to include the
 water surface would broaden its operational envelope to tasks such as water
@@ -20,8 +20,7 @@ small, weight- and power-constrained vehicle, repeatedly taking off from the
 water surface is energetically demanding: overcoming surface adhesion and
 accelerating from rest into flight typically requires either oversized thrust
 or dedicated launch mechanisms that add mass and complexity.  As a result,
-most amphibious aerial robots treat water contact as a terminal
-state---landing, floating, or sampling---rather than as a mode of locomotion
+most amphibious aerial robots treat water contact as a terminal state (landing, floating, or sampling) rather than as a mode of locomotion
 in its own right.% TODO: cite water-takeoff mechanisms / aquatic-aerial robots
 
 A different possibility is suggested by stone-skipping.  A flat stone thrown
@@ -65,8 +64,7 @@ What makes this efficient is the contrast between the two media the hydrofoils
 move through.  Water is nearly three orders of magnitude denser than air, so
 the same hydrofoil, sweeping at the same speed, produces a far larger lift
 force during its brief submersion than it does while spinning in air.  The
-foils therefore impose almost no penalty on flight---they generate negligible
-aerodynamic lift as the vehicle hovers and spins---yet deliver a powerful
+foils therefore impose almost no penalty on flight, generating negligible aerodynamic lift as the vehicle hovers and spins, yet deliver a powerful
 upward impulse the instant they touch water.  This asymmetry allows each hop
 to recover a large fraction of the mechanical energy that would otherwise be
 spent climbing back out of the water, so the vehicle can sustain repeated hops
@@ -78,14 +76,20 @@ tangential blade velocity that the hydrofoils require to generate lift on water
 contact, and it places the airframe in the fast-rotating flight regime analysed
 in Chapter~\ref{chapter:papertwo}, where the spin dominates the attitude
 dynamics and the vehicle must be controlled as a rotating body.  Because the
-spin rate is commanded rather than passively determined, it can be treated as a
-design parameter---tuned to whatever tangential blade speed the hop requires.
+spin rate is commanded rather than passively determined, it can be treated as a design parameter, tuned to whatever tangential blade speed the hop requires.
 The quantitative model of the submersion and ejection is developed in
 Chapter~\ref{dynamic}, and the physical realisation of the spinning airframe and
 its hydrofoils is presented in Chapter~\ref{chapter:paperone}.
 
 \section{Related Work}
 \label{sec:related_work}
+
+\todobox{citations throughout the thesis}{%
+Every \texttt{\textbackslash cite\{??\}} below is unresolved, and the bibliography holds only
+three real entries (the two SplitFlyer papers and Mueller \& D\primeAndrea).
+Needed: amphibious aerial robots; water take-off and launch mechanisms;
+stone-skipping and water-entry physics. The prose does not depend on which
+sources are chosen, so this can be completed independently of the writing.}
 
 % TODO(citations): every \cite{??} below is an unresolved placeholder.
 % References/references.bib currently holds only three real entries
@@ -101,8 +105,7 @@ the water and relaunch from it~\cite{??}, while another adapts rotorcraft to
 land on, float on, or dive beneath the surface~\cite{??}.  A third,
 bio-inspired line mimics animals such as ?? that transition between swimming
 and flight~\cite{??}.  Across these efforts, water contact is generally
-treated as a destination---a dive, a landing, or a sampling stop---and the
-return to the air is handled either by fully restarting flight or by a
+treated as a destination (a dive, a landing, or a sampling stop), and the return to the air is handled either by fully restarting flight or by a
 dedicated launch event.
 
 \paragraph{Leaving the water.}
@@ -120,8 +123,7 @@ robotics.  Stone-skipping and the related water-entry problem have been
 analysed for both spinning and non-spinning bodies~\cite{??}, establishing
 that a flat object striking water at a shallow angle experiences a large,
 short-lived hydrodynamic reaction that can redirect it upward before it
-sinks~\cite{??}.  These studies characterise the conditions for a successful
-skip---approach angle, speed, and spin---but consider passive, unpowered
+sinks~\cite{??}.  These studies characterise the conditions for a successful skip (approach angle, speed, and spin) but consider passive, unpowered
 projectiles rather than a controlled, self-propelled vehicle.
 
 \paragraph{Spinning multirotors.}
@@ -134,16 +136,14 @@ dynamics~\cite{bai2020splitflyer,bai2022splitflyerair}.  In these platforms the
 spin arises as a consequence of the actuator configuration: yaw torque cannot
 be independently cancelled, and the vehicle settles at whatever rate balances
 that residual torque.  The vehicle described here shares the fast-spin regime
-and the reduced-attitude dynamics that come with it, but reaches it by
-different means---dedicated tangential rotors drive the rotation directly, so
+and the reduced-attitude dynamics that come with it, but reaches it by different means: dedicated tangential rotors drive the rotation directly, so
 the spin rate is commanded rather than inherited from the thrust balance.  This
 matters because the hop depends on the tangential speed of the hydrofoils at
 water contact: a spin rate that can be set is a design variable, not a
 constraint to be worked around.
 
 \paragraph{Summary.}
-These bodies of work supply the individual ingredients---amphibious airframes,
-water-entry hydrodynamics, and control of fast-spinning multirotors---but none
+These bodies of work supply the individual ingredients (amphibious airframes, water-entry hydrodynamics, and control of fast-spinning multirotors) but none
 combines them into a vehicle that uses spinning hydrofoils to hop repeatedly
 across water while recovering much of the energy of each bounce.  That
 combination is the subject of this thesis.
@@ -180,7 +180,7 @@ goal breaks into four objectives.
     vehicle after ejection.
 
   \item \textbf{Demonstrate the cycle experimentally.}  Show on hardware that
-    the full sequence---hover, descend, contact, eject, recover---closes, and
+    the full sequence (hover, descend, contact, eject, recover) closes, and
     that the vehicle returns to controlled flight after water contact rather
     than merely surviving a single impact.
 \end{enumerate}
