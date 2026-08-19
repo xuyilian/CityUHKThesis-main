@@ -1,3 +1,119 @@
 \chapter{Conclusion and Future Work}
 \label{chapter:conclusion}
 
+\section{Summary}
+
+This thesis set out to establish water-skipping as a usable mode of
+locomotion for a micro aerial vehicle, and to show that a small rotorcraft can
+be thrown back into the air by its own spinning hydrofoils.
+
+The mechanism rests on a single observation: a surface that is nearly useless
+in air becomes highly effective the instant it enters water, because the two
+fluids differ in density by three orders of magnitude.  A vehicle that spins
+continuously can therefore carry hydrofoils at little cost to its flight, and
+call on them for a large impulse during a contact lasting only tens of
+milliseconds.  Chapter~\ref{dynamic} developed a quasi-steady blade-element
+model of that contact, which identifies the inclination of the foils and the
+conditions of entry as the quantities that govern the outcome, and shows the
+central tension of the manoeuvre: the same sweep that generates the ejecting
+force is itself consumed by the water.
+
+Realising this required a vehicle whose spin could be set rather than merely
+tolerated.  Chapter~\ref{chapter:paperone} describes an airframe in which two
+rotors are mounted tangentially and drive the rotation directly, while two
+remain vertical and provide lift and attitude authority.  Decoupling the yaw
+drive from the lift channel makes the spin rate an operating parameter chosen
+by the experimenter, and---more consequentially for this work---means the
+rotation persists when the lift command is removed entirely.  The flight
+control that keeps such a vehicle stable and position-controllable while
+rotating is developed in Chapter~\ref{chapter:papertwo}, together with the
+online separation of the spin-synchronous artefact from the attitude estimate
+that makes closed-loop control practical at these rates.
+
+Chapter~\ref{chapter:paperthree} reports the flight experiments.  The vehicle
+descends onto the water with its lift rotors commanded to zero, and is
+returned to the air by the hydrofoils alone; the controller is re-engaged only
+once the vehicle is already climbing away from the surface.  Hops were
+repeated, with the vehicle returning to its commanded height between contacts,
+demonstrating that the full cycle closes rather than that a single impact can
+be survived.
+
+\section{Contributions}
+
+The principal contribution is the locomotion mode itself: a rotorcraft that
+travels across water in a sequence of hops, using hydrofoils driven by its own
+rotation to recover a substantial part of the energy of each contact.  This
+treats the water surface as something to move across rather than as a place to
+land, dive, or sample.
+
+Supporting this are a quasi-steady model of hydrofoil-driven ejection that
+relates the hop to foil geometry and entry conditions; an airframe whose spin
+rate is commanded independently of its lift, which both makes the spin a
+design variable and allows the descent to be flown unpowered; and flight
+control at spin rates approaching
+$10{,}000^{\circ}\,\mathrm{s^{-1}}$, at which no controllability limit was
+encountered.
+
+\section{Limitations}
+
+\paragraph{The model over-predicts the contact.}
+The blade-element treatment of Chapter~\ref{dynamic} assumes that the foils
+are immersed to their geometric depth in an undisturbed, flat surface.  At the
+sweep speeds this vehicle reaches, that assumption does not hold: the measured
+contact is markedly longer and gentler than predicted, which is consistent
+with the free surface deforming away from the foils and with ventilation of
+the upper surface.  The model remains useful for the trends it exposes and for
+sizing, but its absolute predictions should not be relied upon at these
+speeds.
+
+\paragraph{Inertia was never measured.}
+The moment of inertia about the spin axis is estimated from a uniform-disk
+approximation rather than measured.  Predicted spin loss through the contact
+depends on it directly, and should be treated as indicative until it is
+determined experimentally.
+
+\paragraph{Instrumentation limited the length of a sequence.}
+The number of consecutive hops that could be recorded was limited by the
+motion-capture system rather than by the vehicle.  Water thrown up at contact
+intermittently interrupts marker tracking at the moment the controller most
+needs position feedback.  Mitigations reduced the cost of a dropout to a
+single hop, but the limitation is one of the measurement environment, and an
+onboard state estimate would remove it.
+
+\section{Future Work}
+
+\paragraph{Contact hydrodynamics.}
+The clearest opening is the discrepancy identified above.  Modelling the
+deformation of the free surface during entry, rather than assuming it flat,
+would close the gap between the predicted and measured contact and turn the
+model into a quantitative design tool.  This is also the route to predicting
+the depth to which the foils penetrate, which the present treatment cannot.
+
+\paragraph{Disturbed and moving water.}
+Every hop reported here was made onto a still surface.  Water encountered
+outside a laboratory is not still, and the surface state at the moment of
+contact is an untouched variable: waves change the effective entry angle, the
+local surface velocity, and the depth available to the foils.  Whether the
+vehicle can hop reliably into a disturbed surface, and how the foils should be
+shaped if it must, is a natural continuation of this work.
+
+\paragraph{Onboard estimation.}
+Removing the dependence on external motion capture would lift the constraint
+that limited hop sequences here, and is a precondition for operating outside a
+prepared volume.
+
+\paragraph{Phase lag at high spin rate.}
+No controllability limit was reached in this work, and the spin rates flown
+were well above what earlier reasoning suggested would be workable.  A
+plausible explanation is that the binding constraint is the phase lag around
+the closed loop rather than the number of control updates per revolution,
+since a rotating vehicle turns measurably between a measurement being taken
+and the corresponding command taking effect.  This was not investigated: no
+latency measurements were recorded, and the observation is offered only as a
+direction, not as a result.
+
+\paragraph{Foil design.}
+Only one hydrofoil geometry was fabricated and flown.  The inclination and
+planform were selected from the model rather than from experiment, and a study
+that varies them on hardware would test the model's predictions directly and
+is the obvious follow-on to the present work.

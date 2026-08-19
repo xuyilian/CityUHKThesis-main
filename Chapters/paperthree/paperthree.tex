@@ -2,8 +2,89 @@
 \label{chapter:paperthree}
 
 \section{Experimental Setup}
+\label{sec:exp_setup}
+
+All flights were conducted indoors over a still water surface, within a
+motion-capture volume that provided the position and attitude feedback for
+the controller.
+
+\paragraph{Motion capture.}
+Vehicle pose is measured by an OptiTrack system running Motive, which
+reconstructs rigid-body position and orientation from clusters of retro-%
+reflective markers and streams them to the ground station over UDP.  Two
+rigid bodies are tracked in every flight: the vehicle itself, and the water
+container, so that the target for the descent is measured rather than assumed
+and the vehicle can be commanded to a point above the water without either
+being surveyed in advance.
+% TODO(setup): camera count, tracked volume dimensions, and mocap frame rate.
+
+\paragraph{Water.}
+Hops are performed over a container of still water, tracked as the second
+rigid body above.
+% TODO(setup): container dimensions and water depth. Depth matters only in
+% that it must exceed the foil penetration; state it so the reader can rule
+% out a bottom effect.
+The surface is left undisturbed before each attempt, so that the entry
+conditions match the flat-surface assumption of the model in
+Chapter~\ref{dynamic}.  No attempt was made to control or characterise the
+surface state after a hop, which becomes relevant when hops are repeated in
+quick succession (Section~\ref{sec:exp_results}).
+
+\paragraph{Vehicle.}
+The vehicle is the $90\;\mathrm{g}$ airframe described in
+Chapter~\ref{chapter:paperone}: a Crazyflie Bolt flight controller, four
+Sparis \mbox{1204} motors of which two are mounted vertically for lift and
+two tangentially to drive the spin, and four hydrofoils spanning
+$75$--$145\;\mathrm{mm}$ from the spin axis at a fixed inclination of
+$30^{\circ}$.  Marker clusters are mounted on the airframe such that they do
+not shadow one another as the vehicle rotates.
+
+\paragraph{Control and communication.}
+The controller of Chapter~\ref{chapter:papertwo} runs off-board on a ground
+station at $100\;\mathrm{Hz}$, taking mocap pose as its only exteroceptive
+input.  Commands reach the vehicle over a $2.4\;\mathrm{GHz}$ radio link as a
+compressed nine-byte packet carrying the two horizontal command components,
+the measured yaw angle, and the collective thrust.  Sending the yaw angle
+rather than a body-frame attitude command allows the projection
+of~\eqref{eq:torque_projection} to be evaluated on board at the attitude-loop
+rate, so that the command remains correctly phased with the vehicle's
+rotation without requiring the outer loop to run at the spin frequency.  The
+tangential rotors are held at a fixed thrust setpoint configured once at
+connection and are not modulated in flight.
+
+\paragraph{Logging.}
+Vehicle state is logged on the ground station at the control rate: mocap
+position and attitude, the filtered attitude estimates of
+Section~\ref{sec:nlms}, the commands issued, and the measured yaw rate.
+Battery voltage and the onboard vertical accelerometer are streamed from the
+vehicle at $100\;\mathrm{Hz}$ over the same link.  All quantities reported in
+this chapter are drawn from these logs, with the exception of the
+qualitative descriptions of vehicle behaviour, which are taken from
+synchronised video.
+% TODO(setup): camera model and frame rate for the video record.
+
+% =====================================================================
+% FIGURE SLOT 5.1 -- EXPERIMENTAL SETUP  [you supply]
+% Either a wide photograph of the flight volume with the water container and
+% the vehicle in frame, or a labelled schematic. Should convey: the mocap
+% cameras around the volume, the container below, and the hover height above
+% the water. A photograph with a few callouts is usually enough.
+% =====================================================================
+\begin{figure}[t]
+    \centering
+    %\includegraphics[width=0.9\linewidth]{Assets/ch5fig0_setup.jpg}
+    \fbox{\begin{minipage}[c][45mm][c]{0.9\linewidth}\centering\itshape
+        Figure pending: experimental setup
+    \end{minipage}}
+    \caption{Experimental setup.  Flights are conducted indoors within a
+    motion-capture volume, over a container of still water that is itself
+    tracked as a rigid body so that the descent target is measured rather
+    than assumed.}
+    \label{fig:setup}
+\end{figure}
 
 \section{Online Separation of Rotation-Induced State Estimation Oscillations}
+\label{sec:nlms}
 
 The vehicle's pose is measured by a motion capture (mocap) system, which
 reconstructs the rigid-body position and orientation quaternion from a cluster
@@ -120,8 +201,72 @@ and $R_{23}$ in the attitude feedback loop, effectively removing the
 spin-frequency artifact from the state estimate seen by the controller.
 
 \section{Constant-Height Jumping on Water}
+\label{sec:constant_height_jumping}
+
+A single hop demonstrates the mechanism; a sequence of them demonstrates that
+the mechanism can be sustained.  This section describes how the vehicle is
+driven through repeated hops, each returning it to the same commanded height,
+so that successive contacts occur under nominally identical conditions.
+
+\paragraph{The hop cycle.}
+One cycle proceeds through four stages.  The vehicle first holds position at a
+commanded height above the water under the controller of
+Chapter~\ref{chapter:papertwo}.  The lift command is then removed---both lift
+rotors are commanded to zero thrust---and the vehicle descends unpowered onto
+the surface.  Throughout this descent the tangential rotors remain at their
+fixed setpoint, so the hydrofoils arrive at the water still sweeping at close
+to their hover speed; this is the property that makes an unpowered descent
+viable at all, and it is a direct consequence of decoupling the yaw drive from
+the lift channel (Section~\ref{sec:attitude_dynamics}).  The foils then
+submerge, reverse the vehicle's vertical velocity, and eject it.  Finally the
+controller is re-engaged and returns the vehicle to the commanded height,
+whereupon the cycle repeats.
+
+\paragraph{Why the descent is left unpowered.}
+Cutting the lift entirely is a stronger test than assisting the ejection, and
+it isolates the contribution of the hydrofoils: whatever upward velocity the
+vehicle leaves the water with has been supplied by the water, not by the
+rotors.  A facility was provided in the flight software to apply thrust during
+the descent, but it was set to zero for every flight reported here and proved
+unnecessary.
+
+\paragraph{Detecting the hop.}
+Re-engaging the controller at the right instant is the practical difficulty in
+closing the cycle.  Too early and the controller fights the contact; too late
+and the vehicle has already fallen back.  Rather than time the transition
+open-loop, it is triggered from the measured motion.  The vehicle is armed
+once a genuine descent is detected---the filtered vertical velocity falling
+below a threshold---and the transition fires when that velocity reverses and
+the vehicle is rising while still close to the surface.  Both conditions must
+be met, so that neither a slow drift nor a spurious velocity excursion can
+trigger a handover.
+
+\paragraph{Rejecting tracking artefacts.}
+The splash raised on contact is the principal disturbance to the measurement,
+not to the vehicle: water thrown across the markers can interrupt tracking at
+precisely the instant the transition logic is watching for.  Two failure
+signatures were observed and are rejected explicitly.  In the first, the
+reported position jumps to an implausible value and the derived velocity
+spikes with it; in the second, the reported position freezes at its last valid
+value for many consecutive samples while the derived velocity decays smoothly
+toward zero, which no genuine motion produces.  Position and velocity
+plausibility bounds reject the former, and a count of consecutive identical
+position samples rejects the latter.
+
+\paragraph{Recovering from a lost measurement.}
+If tracking is lost after the descent has been detected but before the
+rebound, the transition cannot fire and the vehicle would otherwise remain in
+an unpowered state.  A recovery is therefore armed: a fixed additional thrust
+is applied open-loop for a short interval, sufficient to arrest the fall
+without steering, after which control is returned to the height controller.
+The additional thrust is tapered to zero over the final part of that interval
+rather than being removed abruptly, since a step change in thrust at handover
+leaves the height controller with a transient it cannot absorb cleanly.  This
+recovery is a mitigation for the instrumentation, not part of the locomotion:
+it exists so that a tracking dropout costs one hop rather than the flight.
 
 \section{Experimental Results}
+\label{sec:exp_results}
 
 % TODO(text): section prose. Figures are being placed first so the analysis
 % is written against the plots that will actually appear.
@@ -159,4 +304,26 @@ alone.
     apex at a thrust-to-weight ratio below $0.35$, which cannot support the
     vehicle and is omitted from the trace for clarity.}
     \label{fig:hop_single}
+\end{figure}
+% =====================================================================
+% FIGURE SLOT 5.5 -- COMPOSITE MULTI-EXPOSURE OF A HOP  [you supply]
+% Extract frames from one hop video and overlay them into a single image so
+% the vehicle appears at successive instants along its trajectory. This is
+% the figure that makes the manoeuvre legible at a glance, and it is the
+% one a reviewer is most likely to look at first.
+% Source: C0284_stable2hop_propflyoff.MP4 -- the primary analysis case, so
+% the composite and the plotted data describe the same flight.
+% Aim for ~6-10 exposures spanning descent, contact and ejection; a fixed
+% camera and a static background make the overlay straightforward.
+% =====================================================================
+\begin{figure}[t]
+    \centering
+    % TODO(annotate): first-pass composite, 9 exposures lighten-blended from
+    % C0284 frames 356-388 (25 fps). Refine if desired: suppress the
+    % scattered spray, and consider time labels beside each exposure.
+    \includegraphics[width=\linewidth]{Assets/ch5fig5_composite.jpg}
+    \caption{Composite image of a single hop, assembled from successive video
+    frames.  The vehicle descends with its lift rotors commanded off, contacts
+    the surface, and is returned to the air by the hydrofoils.}
+    \label{fig:hop_composite}
 \end{figure}
