@@ -93,8 +93,7 @@ for the position controller are the rotation-matrix entries $R_{13}$ and
 $R_{23}$, which project the body $z$-axis onto the world $x$- and $y$-axes
 and encode the vehicle's lateral tilt.
 
-Because the vehicle operates in a sustained high-yaw-rate relaxed-hover
-condition, a systematic periodic artifact appears in the mocap-derived attitude.
+Because the vehicle operates at a sustained high yaw rate, a systematic periodic artifact appears in the mocap-derived attitude.
 The mocap system locates the vehicle's body-frame origin at the geometric
 centroid of the marker cluster; this centroid does not coincide with the true
 center of mass, which is the actual pivot of the yaw rotation.  As the vehicle
@@ -278,15 +277,15 @@ it exists so that a tracking dropout costs one hop rather than the flight.
 \subsection{Anatomy of a single hop}
 
 Figure~\ref{fig:hop_single} shows one hop in isolation.  From a hover at
-$0.94\;\mathrm{m}$ the lift rotors are commanded to zero thrust and the
-vehicle falls freely to the water surface, reaching
-$-1.55\;\mathrm{m\,s^{-1}}$ at entry.  The foils remain in the water for
-$106\;\mathrm{ms}$, during which the vehicle descends a further
-$86\;\mathrm{mm}$, reverses, and leaves the surface climbing at
-$+0.92\;\mathrm{m\,s^{-1}}$.  The peak upward acceleration during the
-contact is $4.9\,g$.  Throughout the fall, the contact, and the ejection the
-lift rotors carry no command: the reversal is produced by the hydrofoils
-alone.
+$0.95\;\mathrm{m}$ the lift rotors are commanded to zero thrust and the
+vehicle descends unpowered onto the water, arriving at
+$-1.53\;\mathrm{m\,s^{-1}}$.  The contact lasts $75\;\mathrm{ms}$, over
+which the vehicle reaches its lowest point of $0.52\;\mathrm{m}$, reverses,
+and leaves the surface climbing at $+0.92\;\mathrm{m\,s^{-1}}$, by which
+time it has recovered to $0.60\;\mathrm{m}$.  The peak upward acceleration
+during the contact is $4.9\,g$.  Throughout the descent, the contact, and the
+ejection the lift rotors carry no command: the reversal is produced by the
+hydrofoils alone.
 \todobox{comparison with the model of Chapter~\ref{dynamic}}{%
 Place the measured contact duration and exit velocity beside the values the
 blade-element model predicts at the same entry conditions, and state the size
@@ -298,16 +297,16 @@ at length.}
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.72\linewidth]{Assets/ch5fig1_single_hop.pdf}
+    \includegraphics[width=\linewidth]{Assets/ch5fig1_single_hop.pdf}
     \caption{A single water-skipping hop, with the lift rotors commanded
     off throughout.  \textbf{(A)}~Height.  The vehicle is released from a
-    hover at $0.94\;\mathrm{m}$, descends to $0.52\;\mathrm{m}$, and has
-    recovered to $0.61\;\mathrm{m}$ by the time the foils leave the water.
-    \textbf{(B)}~Vertical velocity.  The shaded band marks the water
-    contact, bounded by the two turning points of the velocity trace: entry
-    at $-1.55\;\mathrm{m\,s^{-1}}$, where the descent stops steepening, and
-    exit at $+0.92\;\mathrm{m\,s^{-1}}$, where the water ceases to add
-    upward speed.  \textbf{(C)}~Commanded lift thrust, as a percentage of
+    hover at $0.95\;\mathrm{m}$, descends to $0.52\;\mathrm{m}$, and has
+    recovered to $0.60\;\mathrm{m}$ by the time the foils leave the water.
+    \textbf{(B)}~Vertical velocity.  The shaded band marks the water contact,
+    which begins where the velocity starts to rise steeply, at
+    $-1.53\;\mathrm{m\,s^{-1}}$, and ends at the turning point,
+    $+0.92\;\mathrm{m\,s^{-1}}$, where the water ceases to add upward
+    speed.  \textbf{(C)}~Commanded lift thrust, as a percentage of
     full scale.  The command is cut from its hover value to zero before the
     descent and remains there through the contact and ejection; the bar
     marks the unpowered interval.  Control is restored shortly before the

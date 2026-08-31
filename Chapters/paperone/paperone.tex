@@ -176,22 +176,18 @@ of the remaining simulated angles is left to future work
     \label{fig:hydrofoil_closeup}
 \end{figure}
 
-\section{Structural Analysis of the Hydrofoils}
-\label{sec:foil_fea}
+\section{Structural Considerations}
 
-\todobox{structural analysis, or cut this section}{%
-This section is a stub. Either carry out the finite-element work outlined
-below, or delete the section: an empty heading is worse than no heading. For
-a conference submission the argument does not depend on it, and the foils
-survived every flight reported in Chapter~\ref{chapter:paperthree}, which is
-itself the relevant evidence. Recommend cutting unless the analysis is
-already in hand.}
+The hydrofoils are the only part of the vehicle to strike the water, and they
+do so at a tangential speed of roughly $20\;\mathrm{m\,s^{-1}}$ at the tip.
+Each is therefore moulded as one piece with the leg that carries it, so that
+the load path from the water to the airframe passes through no joint, and is
+made $3\;\mathrm{mm}$ thick to keep bending under impact small enough that the
+rigid-foil assumption of Chapter~\ref{dynamic} remains reasonable.
 
-% TODO: ANSYS FEA of the candidate hydrofoil geometries.
-% Loads: peak water-impact distributed pressure extracted from the
-%   blade-element model (Chapter~\ref{dynamic}); root clamped at mount.
-% Static structural: max von Mises vs yield (safety factor); tip deflection
-%   as fraction of chord (justifies the rigid-foil assumption in the BEM model).
-% Modal: first natural frequencies vs spin/impact excitation.
-% Geometry + material sweep -> stiffness/strength/mass trade table feeding
-%   the foil-set selection in Section~\ref{sec:foil_design}.
+No finite-element analysis was carried out.  The evidence offered here is
+empirical: the same set of foils flew every experiment reported in
+Chapter~\ref{chapter:paperthree}, across repeated water contacts, without
+fracture or measurable permanent deformation.  A quantitative treatment of
+impact stress and tip deflection, and the foil geometry study it would
+support, are left to future work (Chapter~\ref{chapter:conclusion}).
