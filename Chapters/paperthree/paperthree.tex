@@ -286,14 +286,23 @@ time it has recovered to $0.60\;\mathrm{m}$.  The peak upward acceleration
 during the contact is $4.9\,g$.  Throughout the descent, the contact, and the
 ejection the lift rotors carry no command: the reversal is produced by the
 hydrofoils alone.
-\todobox{comparison with the model of Chapter~\ref{dynamic}}{%
-Place the measured contact duration and exit velocity beside the values the
-blade-element model predicts at the same entry conditions, and state the size
-of the discrepancy. The model predicts a markedly shorter and harder contact
-than is observed, consistent with the free surface deforming away from the
-foils rather than remaining flat. Two or three sentences; the limitation is
-already stated in Chapter~\ref{chapter:conclusion} and need not be repeated
-at length.}
+Chapter~\ref{dynamic} predicts, for these entry conditions, an exit velocity
+of $+1.4\;\mathrm{m\,s^{-1}}$ and a contact lasting about $4\;\mathrm{ms}$.
+The measured exit velocity is of the same order, but the measured contact is
+some thirty times longer.  The model therefore delivers roughly the right
+impulse, but delivers it far too abruptly: it predicts a very large force
+acting over a very short interval, where the vehicle experiences a moderate
+force acting over a long one.
+
+The discrepancy is one of assumption rather than arithmetic.  The model treats
+the water surface as flat and undisturbed, so that a foil at depth $z$ is
+wetted over $z/\sin\beta$ of its chord.  At a sweep speed of roughly
+$20\;\mathrm{m\,s^{-1}}$ the surface cannot be treated this way: it is driven
+down ahead of the foils, which ride in the depression they create rather than
+in still water, and the upper surface is free to ventilate.  Both effects
+reduce the wetted area far below its geometric value.  Section~2.1 states this
+assumption explicitly, and Chapter~\ref{chapter:conclusion} returns to it as
+the clearest opening for further work.
 
 \begin{figure}[t]
     \centering
@@ -317,33 +326,94 @@ at length.}
 
 \subsection{Repeated hops at constant height}
 
-\todobox{the two-hop sequence}{%
-Written against the primary analysis case, \texttt{stable2hop}. Should show
-the full cycle closing twice: hover, unpowered descent, contact, ejection,
-recovery to the commanded height, and a second descent from that height.
-Report the height returned to between hops and how closely the second
-contact reproduces the first. A figure of height, vertical velocity and lift
-command across both hops is to be generated from the flight log.}
+Figure~\ref{fig:hop_two} shows two consecutive hops from the same flight.  The
+vehicle is released from $1.02\;\mathrm{m}$, contacts the water at
+$-1.85\;\mathrm{m\,s^{-1}}$, and is ejected at $+1.01\;\mathrm{m\,s^{-1}}$
+after a contact of $127\;\mathrm{ms}$.  The controller then returns it to the
+commanded height, and the cycle repeats: the second release is from
+$1.01\;\mathrm{m}$, within $10\;\mathrm{mm}$ of the first, and the second
+contact reproduces the first closely, entering at
+$-1.82\;\mathrm{m\,s^{-1}}$ and leaving at $+1.19\;\mathrm{m\,s^{-1}}$ after
+$117\;\mathrm{ms}$.
+
+The agreement between the two contacts matters more than either taken alone.
+Because the vehicle returns to the same height, it arrives at the surface with
+nearly the same velocity and nearly the same spin, so the second hop is not a
+different manoeuvre performed under different conditions but a repetition of
+the first.  This is what closing the cycle means in practice, and it is the
+result a single hop cannot establish.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{Assets/ch5fig2_two_hop.pdf}
+    \caption{Two consecutive hops at constant commanded height.
+    \textbf{(A)}~Height: the vehicle is released, contacts the water, is
+    ejected, is returned to the commanded height by the controller, and is
+    released again.  \textbf{(B)}~Vertical velocity, with the two contacts
+    shaded.  \textbf{(C)}~Commanded lift thrust, which is zero through both
+    descents and both contacts and non-zero only during the recoveries
+    between them.  The second release is within $10\;\mathrm{mm}$ of the
+    first, so the two contacts occur under nearly identical conditions.}
+    \label{fig:hop_two}
+\end{figure}
 
 \subsection{Consistency across flights}
 
-\todobox{hop-to-hop repeatability}{%
-Entry velocity, exit velocity, contact duration and spin retention across
-all reported cases, as a table or a scatter of exit against entry velocity.
-Establishes that the hop is repeatable rather than a single fortunate event.
-Measured ranges: entry $-1.55$ to $-1.87\;\mathrm{m\,s^{-1}}$, exit $+0.17$
-to $+0.53\;\mathrm{m\,s^{-1}}$, contact $42$--$106\;\mathrm{ms}$, and about
-$40\%$ of the entry spin retained.}
+Table~\ref{tab:hop_summary} collects every contact for which the exit is
+unambiguous: eight, drawn from six flights.  The entry conditions are tightly
+grouped because they are set by the same procedure each time, a release from
+approximately $0.95\;\mathrm{m}$ with the lift rotors commanded off, and the
+outcomes are correspondingly consistent.  Entry velocities span $-1.53$ to
+$-1.85\;\mathrm{m\,s^{-1}}$, exit velocities $+0.57$ to
+$+1.57\;\mathrm{m\,s^{-1}}$, and peak accelerations $4.9$ to $5.7\,g$.  Spin
+at entry varies by less than $7\%$ across the whole set.
+
+The ratio of exit to entry speed averages $0.60$, so rather more than half the
+approach velocity is returned.  The contact is thus neither a passive
+absorption nor an elastic bounce: a little over a third of the vehicle's
+downward momentum is reversed by the foils, and the remainder is the price of
+the exchange.  Contact duration is the least consistent quantity, ranging from
+$74$ to $222\;\mathrm{ms}$, which is unsurprising given that it depends on how
+deeply the foils engage and therefore on the state of a surface that is not
+controlled between attempts.
+
+\begin{table}[t]
+    \centering
+    \caption{Every water contact with an unambiguous exit, across six flights.
+    Entry and exit are the vertical velocities bounding the contact, peak is
+    the largest upward acceleration during it, and spin is the yaw rate on
+    arrival at the surface.}
+    \label{tab:hop_summary}
+    \begin{tabular}{llrrrrr}
+        \toprule
+        Flight & Hop & Entry & Exit & Contact & Peak & Spin \\
+               &     & [m\,s$^{-1}$] & [m\,s$^{-1}$] & [ms] & [$g$] & [$10^3$\,deg\,s$^{-1}$] \\
+        \midrule
+        High hop        & 1 & $-1.53$ & $+0.92$ & $75$  & $4.9$ & $7.8$ \\
+        Wobbly          & 2 & $-1.58$ & $+1.57$ & $137$ & $5.1$ & $7.7$ \\
+        2.5fuh          & 1 & $-1.60$ & $+1.07$ & $117$ & $5.5$ & $7.4$ \\
+        2.5fuh          & 2 & $-1.79$ & $+0.64$ & $74$  & $5.4$ & $7.5$ \\
+        Stable two-hop  & 1 & $-1.85$ & $+1.01$ & $127$ & $5.2$ & $7.6$ \\
+        Stable two-hop  & 2 & $-1.82$ & $+1.19$ & $117$ & $5.5$ & $7.4$ \\
+        Two-hop, double & 1 & $-1.59$ & $+1.11$ & $118$ & $5.3$ & $7.9$ \\
+        Two-hop, double & 2 & $-1.82$ & $+0.57$ & $222$ & $5.7$ & $7.6$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 \subsection{Limits of the measurement}
 
-\todobox{the tracking dropout at the splash}{%
-One short, factual paragraph. Longer hop sequences were prevented by loss of
-motion-capture tracking when water is thrown across the markers, not by any
-limitation of the vehicle or the controller. State it once, note the
-mitigation described in Section~\ref{sec:constant_height_jumping}, and move
-on. Do not treat it as a failed result, and do not let it grow into a
-section.}
+Longer sequences were attempted and were not recorded cleanly.  The reason is
+the measurement rather than the vehicle: water thrown up at contact
+intermittently obscures the markers, and tracking is lost for a few tenths of
+a second at precisely the moment the controller depends on it.  Two further
+contacts in the set above show this directly, their exits falling inside a
+dropout and so being excluded from Table~\ref{tab:hop_summary}.  The
+mitigations of Section~\ref{sec:constant_height_jumping} reduce the cost of a
+dropout to a single hop rather than the flight, but they do not restore the
+measurement.  An onboard state estimate would remove the limitation
+altogether, and is noted in Chapter~\ref{chapter:conclusion} as future
+work.
 % =====================================================================
 % FIGURE SLOT 5.5 -- COMPOSITE MULTI-EXPOSURE OF A HOP  [you supply]
 % Extract frames from one hop video and overlay them into a single image so
