@@ -337,9 +337,9 @@ the clearest opening for further work.
 Figure~\ref{fig:hop_two} shows two consecutive hops from the same flight.  The
 vehicle is released from $1.02\;\mathrm{m}$, contacts the water at
 $-1.85\;\mathrm{m\,s^{-1}}$, and is ejected at $+1.01\;\mathrm{m\,s^{-1}}$
-after a contact of $127\;\mathrm{ms}$.  The controller then returns it to the
-commanded height, and the cycle repeats: the second release is from
-$1.01\;\mathrm{m}$, within $10\;\mathrm{mm}$ of the first, and the second
+after a contact of $127\;\mathrm{ms}$.  The controller then flies it back up
+and holds it, and the cycle repeats: the second release is from
+$1.01\;\mathrm{m}$, within $8\;\mathrm{mm}$ of the first, and the second
 contact reproduces the first closely, entering at
 $-1.82\;\mathrm{m\,s^{-1}}$ and leaving at $+1.19\;\mathrm{m\,s^{-1}}$ after
 $117\;\mathrm{ms}$.
@@ -356,12 +356,12 @@ result a single hop cannot establish.
     \includegraphics[width=\linewidth]{Assets/ch5fig2_two_hop.pdf}
     \caption{Two consecutive hops at constant commanded height.
     \textbf{(A)}~Height: the vehicle is released, contacts the water, is
-    ejected, is returned to the commanded height by the controller, and is
-    released again.  \textbf{(B)}~Vertical velocity, with the two contacts
-    shaded.  \textbf{(C)}~Commanded lift thrust, which is zero through both
-    descents and both contacts and non-zero only during the recoveries
-    between them.  The second release is within $10\;\mathrm{mm}$ of the
-    first, so the two contacts occur under nearly identical conditions.}
+    ejected, is flown back up by the controller, and is released again.
+    \textbf{(B)}~Vertical velocity, with the two contacts shaded.
+    \textbf{(C)}~Commanded lift thrust, zero through both descents and
+    non-zero only during the recoveries between them.  The second release is
+    within $8\;\mathrm{mm}$ of the first, so the two contacts occur under
+    nearly identical conditions.}
     \label{fig:hop_two}
 \end{figure}
 
