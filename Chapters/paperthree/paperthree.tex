@@ -199,12 +199,23 @@ The filtered estimates $\hat A_{13}$ and $\hat A_{23}$ replace the raw $R_{13}$
 and $R_{23}$ in the attitude feedback loop, effectively removing the
 spin-frequency artifact from the state estimate seen by the controller.
 
-\todobox{figure: the spin-artefact filter acting on flight data}{%
-Raw $R_{13}$ and $R_{23}$ against their filtered estimates over a few
-seconds of hover, showing the spin-frequency oscillation present in the raw
-signals and absent from the filtered ones. All four traces are already
-logged, so this needs no new experiment. It is the figure that demonstrates
-the method of this section actually works in flight.}
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{Assets/ch5fig3_nlms.pdf}
+    \caption{The spin-artefact filter acting on flight data, over four
+    seconds of steady hover at a spin rate of roughly
+    $8500\;\mathrm{deg\,s^{-1}}$.  Grey traces are the raw attitude entries
+    $R_{13}$ \textbf{(A)} and $R_{23}$ \textbf{(B)} as derived from the
+    motion-capture quaternion; coloured traces are the filtered estimates
+    the controller uses.  The dominant frequency of the raw oscillation
+    matches the measured spin rate, consistent with its origin in the
+    offset between the marker centroid and the centre of mass.  The filter
+    removes $73\%$ of the peak-to-peak excursion in $R_{13}$ and $63\%$ in
+    $R_{23}$.  The raw traces appear jagged because the logging rate of
+    roughly $95\;\mathrm{Hz}$ leaves only about four samples per
+    oscillation cycle.}
+    \label{fig:nlms_filter}
+\end{figure}
 
 \section{Constant-Height Jumping on Water}
 \label{sec:constant_height_jumping}
@@ -365,6 +376,30 @@ result a single hop cannot establish.
     \label{fig:hop_two}
 \end{figure}
 
+% =====================================================================
+% FIGURE SLOT 5.5 -- COMPOSITE MULTI-EXPOSURE OF A HOP  [you supply]
+% Extract frames from one hop video and overlay them into a single image so
+% the vehicle appears at successive instants along its trajectory. This is
+% the figure that makes the manoeuvre legible at a glance, and it is the
+% one a reviewer is most likely to look at first.
+% Source: C0284_stable2hop_propflyoff.MP4 -- the primary analysis case, so
+% the composite and the plotted data describe the same flight.
+% Aim for ~6-10 exposures spanning descent, contact and ejection; a fixed
+% camera and a static background make the overlay straightforward.
+% =====================================================================
+\begin{figure}[t]
+    \centering
+    % TODO(annotate): first-pass composite, 9 exposures lighten-blended from
+    % C0284 frames 356-388 (25 fps). Refine if desired: suppress the
+    % scattered spray, and consider time labels beside each exposure.
+    \includegraphics[width=\linewidth]{Assets/ch5fig5_composite.jpg}
+    \caption{Composite image of one hop from the sequence of
+    Figure~\ref{fig:hop_two}, assembled from successive video frames of the
+    same flight.  The vehicle descends with its lift rotors commanded off,
+    contacts the surface, and is returned to the air by the hydrofoils.}
+    \label{fig:hop_composite}
+\end{figure}
+
 \subsection{Consistency across flights}
 
 Table~\ref{tab:hop_summary} collects every contact for which the exit is
@@ -422,25 +457,4 @@ dropout to a single hop rather than the flight, but they do not restore the
 measurement.  An onboard state estimate would remove the limitation
 altogether, and is noted in Chapter~\ref{chapter:conclusion} as future
 work.
-% =====================================================================
-% FIGURE SLOT 5.5 -- COMPOSITE MULTI-EXPOSURE OF A HOP  [you supply]
-% Extract frames from one hop video and overlay them into a single image so
-% the vehicle appears at successive instants along its trajectory. This is
-% the figure that makes the manoeuvre legible at a glance, and it is the
-% one a reviewer is most likely to look at first.
-% Source: C0284_stable2hop_propflyoff.MP4 -- the primary analysis case, so
-% the composite and the plotted data describe the same flight.
-% Aim for ~6-10 exposures spanning descent, contact and ejection; a fixed
-% camera and a static background make the overlay straightforward.
-% =====================================================================
-\begin{figure}[t]
-    \centering
-    % TODO(annotate): first-pass composite, 9 exposures lighten-blended from
-    % C0284 frames 356-388 (25 fps). Refine if desired: suppress the
-    % scattered spray, and consider time labels beside each exposure.
-    \includegraphics[width=\linewidth]{Assets/ch5fig5_composite.jpg}
-    \caption{Composite image of a single hop, assembled from successive video
-    frames.  The vehicle descends with its lift rotors commanded off, contacts
-    the surface, and is returned to the air by the hydrofoils.}
-    \label{fig:hop_composite}
-\end{figure}
+
