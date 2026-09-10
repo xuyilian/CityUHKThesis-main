@@ -13,7 +13,7 @@ power to remain aloft above them.  Extending an MAV's mobility to include the
 water surface would broaden its operational envelope to tasks such as water
 sampling, surface skimming, and persistent monitoring of aquatic environments,
 while allowing the vehicle to rest on or interact with the surface between
-flight phases.% TODO: cite MAV applications / amphibious aerial robots
+flight phases~\cite{floreano2015science,siddall2014launching}.
 
 The central difficulty is not resting on water but leaving it again.  For a
 small, weight- and power-constrained vehicle, repeatedly taking off from the
@@ -21,14 +21,14 @@ water surface is energetically demanding: overcoming surface adhesion and
 accelerating from rest into flight typically requires either oversized thrust
 or dedicated launch mechanisms that add mass and complexity.  As a result,
 most amphibious aerial robots treat water contact as a terminal state (landing, floating, or sampling) rather than as a mode of locomotion
-in its own right.% TODO: cite water-takeoff mechanisms / aquatic-aerial robots
+in its own right~\cite{chen2017biologically,zufferey2019consecutive}.
 
 A different possibility is suggested by stone-skipping.  A flat stone thrown
 at a shallow angle skips across water because, during each brief contact, the
 water produces a large transient hydrodynamic reaction that redirects the
 stone upward before it can sink; the contact is short, the energy lost per
 bounce is small, and the stone traverses the surface in a sequence of low-cost
-hops.% TODO: cite stone-skipping physics (e.g. Bocquet 2003)
+hops~\cite{bocquet2003physics,clanet2004secrets}.
 This thesis adapts that principle to a powered vehicle: rather than hovering
 above the water or floating on it, the vehicle hops across the surface, using
 brief hydrofoil contact to recover much of the energy needed to return to the
@@ -84,46 +84,35 @@ its hydrofoils is presented in Chapter~\ref{chapter:paperone}.
 \section{Related Work}
 \label{sec:related_work}
 
-\todobox{citations throughout the thesis}{%
-Every \texttt{\textbackslash cite\{??\}} below is unresolved, and the bibliography holds only
-three real entries (the two SplitFlyer papers and Mueller \& D\primeAndrea).
-Needed: amphibious aerial robots; water take-off and launch mechanisms;
-stone-skipping and water-entry physics. The prose does not depend on which
-sources are chosen, so this can be completed independently of the writing.}
 
-% TODO(citations): every \cite{??} below is an unresolved placeholder.
-% References/references.bib currently holds only three real entries
-% (bai2020splitflyer, bai2022splitflyerair, mueller2016relaxed); the rest are
-% example-reference-N boilerplate. Needs: amphibious aerial robots, water
-% takeoff/launch mechanisms, stone-skipping & water-entry physics (Bocquet).
-% The prose is written and does not depend on which sources are chosen.
 
 \paragraph{Aquatic--aerial robots.}
 Robots able to operate in both air and water have been pursued from several
 directions.  One line of work develops fixed-wing vehicles that plunge into
-the water and relaunch from it~\cite{??}, while another adapts rotorcraft to
-land on, float on, or dive beneath the surface~\cite{??}.  A third,
-bio-inspired line mimics animals such as ?? that transition between swimming
-and flight~\cite{??}.  Across these efforts, water contact is generally
+the water and relaunch from it~\cite{siddall2014launching}, while another adapts rotorcraft to
+land on, float on, or dive beneath the surface~\cite{alzubi2018loon}.  A third,
+bio-inspired line mimics animals such as flying fish, diving birds, and
+semi-aquatic insects that transition between swimming
+and flight~\cite{zufferey2019consecutive,chen2017biologically}.  Across these efforts, water contact is generally
 treated as a destination (a dive, a landing, or a sampling stop), and the return to the air is handled either by fully restarting flight or by a
 dedicated launch event.
 
 \paragraph{Leaving the water.}
 Departing the surface is the most demanding part of amphibious operation, and
 existing vehicles address it in energy-intensive ways.  Reported mechanisms
-include impulsive jumping~\cite{??}, rapid gas generation or
-combustion~\cite{??}, and simply oversizing the propulsion system to overcome
-surface adhesion and accelerate from rest~\cite{??}.  These approaches enable a
+include impulsive jumping~\cite{zufferey2019consecutive}, rapid gas generation or
+combustion~\cite{chen2017biologically}, and simply oversizing the propulsion system to overcome
+surface adhesion and accelerate from rest~\cite{alzubi2018loon}.  These approaches enable a
 single transition but are poorly suited to repeated water contact, because
 each takeoff consumes a large, non-recoverable share of the energy budget.
 
 \paragraph{Water-entry and skipping physics.}
 The physics of objects bouncing on water has been studied independently of
 robotics.  Stone-skipping and the related water-entry problem have been
-analysed for both spinning and non-spinning bodies~\cite{??}, establishing
+analysed for both spinning and non-spinning bodies~\cite{bocquet2003physics,truscott2014water}, establishing
 that a flat object striking water at a shallow angle experiences a large,
 short-lived hydrodynamic reaction that can redirect it upward before it
-sinks~\cite{??}.  These studies characterise the conditions for a successful skip (approach angle, speed, and spin) but consider passive, unpowered
+sinks~\cite{clanet2004secrets}.  These studies characterise the conditions for a successful skip (approach angle, speed, and spin) but consider passive, unpowered
 projectiles rather than a controlled, self-propelled vehicle.
 
 \paragraph{Spinning multirotors.}
