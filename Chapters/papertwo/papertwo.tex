@@ -34,9 +34,15 @@ Because the vehicle spins at high yaw rate, a non-revolving intermediate
 frame $(\hat{x}^m, \hat{y}^m, \hat{z}^b)$ is introduced to describe the
 attitude of the spinning disk independently of the instantaneous yaw
 angle~\cite{bai2022splitflyerair}.  Under the small-inclination assumption
-$|\alpha_x|, |\alpha_y| \ll 1$, the reduced attitude state
-$\boldsymbol{\eta} = [\alpha_x, \alpha_y]^{\top}$ parametrises the deviation
-of $\hat{z}^b$ from vertical, and the non-revolving axes are approximated as
+$|\alpha_x|, |\alpha_y| \ll 1$, the deviation of the thrust axis $\hat{z}^b$
+from vertical is parametrised by the reduced attitude state
+\begin{equation}
+    \boldsymbol{\eta} = [\alpha_x,\; \alpha_y]^{\top},
+    \label{eq:eta_def}
+\end{equation}
+where $\alpha_x$ and $\alpha_y$ are the small inclinations of $\hat{z}^b$
+about the inertial $\hat{x}^w$ and $\hat{y}^w$ axes respectively.  The
+non-revolving axes are then approximated as
 \begin{equation}
     \hat{x}^m \approx [1,\;0,\;{-\alpha_y}]^{\top},
     \qquad
@@ -350,8 +356,8 @@ Section~\ref{sec:attitude_dynamics} established that the vehicle operates at
 an approximately constant yaw rate $\omega_z$ set by the commanded tangential
 thrust, with the tilt rates $|\omega_x|, |\omega_y|$ remaining small compared
 to $\omega_z$.  This separation of timescales motivates a reduced
-two-dimensional description in the tilt state $\boldsymbol{\eta}$ that
-eliminates the fast yaw and retains only the controllable attitude evolution.
+two-dimensional description in the tilt state $\boldsymbol{\eta}$
+of~\eqref{eq:eta_def} that eliminates the fast yaw and retains only the controllable attitude evolution.
 
 \paragraph{Inertial angular momentum.}
 The angular momentum in the inertial frame is
@@ -436,10 +442,10 @@ so the projected drag torque is $\tilde{\boldsymbol{\tau}}_d =
 Combining the projected angular momentum with the external torques yields
 the \emph{gyroscopic reduced attitude equation}:
 \begin{equation}
-    \boxed{I_d\ddot{\boldsymbol{\eta}}
+    I_d\ddot{\boldsymbol{\eta}}
         + I_z\omega_z\boldsymbol{J}\dot{\boldsymbol{\eta}}
         = \tilde{\boldsymbol{\tau}}_w
-          - \bar{D}\dot{\boldsymbol{\eta}}.}
+          - \bar{D}\dot{\boldsymbol{\eta}} .
     \label{eq:reduced_attitude}
 \end{equation}
 The gyroscopic term $I_z\omega_z\boldsymbol{J}\dot{\boldsymbol{\eta}}$

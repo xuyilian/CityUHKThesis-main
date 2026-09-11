@@ -32,7 +32,7 @@ vehicle to the air before the spin has decayed too far to keep it controllable
 once there.  The model developed in this chapter quantifies both effects: the
 quasi-steady hydrodynamics of a single foil section
 (Section~\ref{sec:quasi_steady}), their integration along the span
-(Section~\ref{sec:blade_element}), and the coupled vertical and rotational
+(Section~\ref{sec:quasi_steady}), and the coupled vertical and rotational
 motion that results (Section~\ref{sec:vertical_rotational}).
 
 \paragraph{Scope and assumptions.}
@@ -62,6 +62,13 @@ radial width $dr$, each evaluated as a two-dimensional section under
 quasi-steady conditions, and the element forces are integrated along the span.
 The quasi-steady hydrodynamics are introduced directly at the element level
 below, since that is the only level at which they are applied.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{Assets/blade_element_diagram.pdf}
+    \caption{Definitions for the water-skipping hydrodynamic model. \textbf{(A)} Side view (the $x$--$z$ plane) of a single foil section, showing the inclination angle $\beta$, the inflow angle $\gamma$, the angle of attack $\alpha = \beta + \gamma$, the relative velocity $v$ with its horizontal and vertical components $v_x$ and $\dot{z}$, and the lift and drag forces $F_L$ and $F_D$ (perpendicular and parallel to $v$). \textbf{(B)} Top view (the $x$--$y$ plane) of the rotating foil, spinning at angular rate $\omega$ about the marked axis of rotation and extending from the root radius $r_{\mathrm{in}}$ out to the tip radius $r_{\mathrm{tip}}$; a blade element at radius $r$ has radial width $dr$. The chord $c$ denotes the physical streamwise extent of the foil; only its submerged portion $c_{\mathrm{sub}}$ enters the model.}
+    \label{fig:model_definitions}
+\end{figure}
 
 \paragraph{Element kinematics.}
 Figure~\ref{fig:model_definitions}(B) shows the foil in plan view.  It occupies

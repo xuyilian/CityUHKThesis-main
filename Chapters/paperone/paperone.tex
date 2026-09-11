@@ -74,7 +74,10 @@ therefore cannot be finalised independently of the flight dynamics.
 \paragraph{Frame and propulsion.}
 The frame carries a core of diameter $150\;\mathrm{mm}$, i.e.\ a radius of
 $75\;\mathrm{mm}$ from the vehicle centre to the point where each hydrofoil
-assembly begins.  Four Sparis \mbox{1204} motors, rated at
+assembly begins.  This radius is the root radius $r_{\mathrm{in}}$ of the
+blade-element model of Chapter~\ref{dynamic}, and the foil tip reaches the tip
+radius $r_{\mathrm{tip}} = 145\;\mathrm{mm}$; the two bound the span over which
+the hydrodynamic force is integrated.  Four Sparis \mbox{1204} motors, rated at
 $4{,}500\;\mathrm{KV}$, are installed at this radius: two are mounted
 vertically and provide lift and attitude authority, and two are mounted
 horizontally, tangential to the frame, and provide yaw-drive thrust only
@@ -147,13 +150,21 @@ planform area $S_f = c_f\, L_f = 1{,}050\;\mathrm{mm}^2$.
 \paragraph{Attack angle.}
 The hydrofoil is mounted at a fixed attack angle $\beta$ relative to the
 horizontal plane, with its angled face oriented to strike the water surface
-directly.  Candidate values $\beta \in \{5^{\circ}, 10^{\circ}, 15^{\circ},
-20^{\circ}, 25^{\circ}, 30^{\circ}\}$ were evaluated in the blade-element
-simulation of Chapter~\ref{dynamic} against predicted ejection
-velocity and hop height, but only $\beta = 30^{\circ}$ was fabricated and
-flight-tested; the fabricated hydrofoil is fixed at $\beta = 30^{\circ}$
-with no active or passive attack-angle mechanism.  Experimental validation
-of the remaining simulated angles is left to future work
+directly.  The inclination was swept continuously in the blade-element simulation of
+Chapter~\ref{dynamic}, which shows the ejection velocity rising with $\beta$
+while the spin retained through the contact falls
+(Section~\ref{sec:simulation}).  A steeper foil therefore buys a larger hop at
+the cost of the rotation the next hop depends on, and $\beta = 30^{\circ}$ was
+selected as a compromise near the middle of that trade: it lies in the range
+where the predicted ejection is already well above what is needed to clear the
+surface, while the predicted spin loss remains modest.
+
+Only this one value was fabricated.  The foils are moulded as a single part
+with their legs (Section~\ref{sec:mech_design}), so changing $\beta$ requires a
+new mould rather than an adjustment, and the fabricated foil is fixed at
+$30^{\circ}$ with no active or passive attack-angle mechanism.  The simulated
+dependence on $\beta$ is therefore untested on hardware, and a study that
+varies it is identified as the obvious follow-on
 (Chapter~\ref{chapter:conclusion}).
 
 % =====================================================================

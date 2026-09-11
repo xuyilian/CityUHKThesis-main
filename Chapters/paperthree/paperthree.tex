@@ -1,6 +1,21 @@
 \chapter{Experimental Validation}
 \label{chapter:paperthree}
 
+The preceding chapters predict that a spinning hydrofoil can eject the vehicle
+from a water surface, and describe an airframe and a controller built to do it.
+This chapter tests that prediction in flight.
+
+Three questions are put to the hardware.  Does the contact reverse the
+vehicle's descent at all, and if so by how much?  Does the model of
+Chapter~\ref{dynamic} predict that reversal correctly?  And can the vehicle be
+returned to controlled flight afterwards and made to repeat the manoeuvre,
+which is what separates a mode of locomotion from a survivable impact?
+Section~\ref{sec:exp_setup} describes the flight environment and what is
+measured, Section~\ref{sec:nlms} the online filter that makes closed-loop
+control practical at these spin rates,
+Section~\ref{sec:constant_height_jumping} the manoeuvre itself, and
+Section~\ref{sec:exp_results} the results.
+
 \section{Experimental Setup}
 \label{sec:exp_setup}
 
@@ -21,9 +36,10 @@ being surveyed in advance.
 \paragraph{Water.}
 Hops are performed over a container of still water, tracked as the second
 rigid body above.
-% TODO(setup): container dimensions and water depth. Depth matters only in
-% that it must exceed the foil penetration; state it so the reader can rule
-% out a bottom effect.
+% TODO(setup): container dimensions and water depth. Asked for explicitly in
+% the first-round review, so a real number is needed here. Depth matters in
+% that it must exceed the foil penetration, letting the reader rule out a
+% bottom effect.
 The surface is left undisturbed before each attempt, so that the entry
 conditions match the flat-surface assumption of the model in
 Chapter~\ref{dynamic}.  No attempt was made to control or characterise the
@@ -111,8 +127,17 @@ The measured attitude signals are modeled as
     R_{23}(t) &= A_{23} + B_{23}\sin\phi(t) + C_{23}\cos\phi(t),
     \label{eq:R23model}
 \end{align}
-where $\phi(t)$ is the accumulated yaw phase and $A_{13}$, $A_{23}$ are the
-low-frequency components representing the true attitude to be recovered.
+where $A_{13}$, $A_{23}$ are the low-frequency components representing the true
+attitude to be recovered.
+
+Two angles appear in this section and should not be confused.  The yaw angle
+$\psi$ is the measured heading of the vehicle, reported modulo $360^{\circ}$ by
+the motion-capture system.  The phase $\phi$ is an internally accumulated
+quantity, unwrapped and integrated from the filtered yaw rate
+by~\eqref{eq:phase_int}, and grows without bound.  The artefact is periodic in
+the heading, but the estimator requires a continuous phase rather than an angle
+that jumps by $360^{\circ}$ once per revolution, which is why $\phi$ is tracked
+separately rather than taken directly from $\psi$.
 
 \paragraph{Phase tracking.}
 The instantaneous yaw rate $\dot\psi$ is obtained by differentiating the mocap
@@ -390,13 +415,21 @@ result a single hop cannot establish.
 \begin{figure}[t]
     \centering
     % TODO(annotate): first-pass composite, 9 exposures lighten-blended from
-    % C0284 frames 356-388 (25 fps). Refine if desired: suppress the
-    % scattered spray, and consider time labels beside each exposure.
+    % C0284 frames 356-388 (25 fps), i.e. every 4th frame = 160 ms apart,
+    % contact at frame 374. The timings are now stated in the caption; adding
+    % them as labels beside each exposure would be better still. Optional:
+    % suppress the scattered spray.
     \includegraphics[width=\linewidth]{Assets/ch5fig5_composite.jpg}
     \caption{Composite image of one hop from the sequence of
-    Figure~\ref{fig:hop_two}, assembled from successive video frames of the
-    same flight.  The vehicle descends with its lift rotors commanded off,
-    contacts the surface, and is returned to the air by the hydrofoils.}
+    Figure~\ref{fig:hop_two}, assembled from successive frames of the video
+    record of the same flight.  Nine exposures are shown at a uniform spacing
+    of $160\;\mathrm{ms}$, spanning $1.28\;\mathrm{s}$ in total; water contact
+    occurs between the fifth and sixth, which fall $80\;\mathrm{ms}$ before and
+    after it.  The vehicle descends with its lift rotors commanded off,
+    contacts the surface, and is returned to the air by the hydrofoils.  The
+    contact itself lasts far less than the interval between exposures, so no
+    single frame captures it: the spray visible at the surface is its
+    aftermath.}
     \label{fig:hop_composite}
 \end{figure}
 
