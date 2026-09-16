@@ -87,10 +87,8 @@ same direction as the tangential pair, these reaction torques add:
              + \underbrace{c\,(f_{1,p} + f_{3,p})}_{\text{reaction}}.
     \label{eq:yaw_torque}
 \end{equation}
-The first term dominates and is commanded directly.  The tangential thrusts are
-driven by a constant yaw term in the setpoint, carried on the yaw channel of
-the mixer and therefore applied as a differential between the two rotor pairs;
-because that term is issued independently of the lift channel, the spin rate is
+The first term dominates and is commanded directly: the tangential thrusts are
+held at a fixed setpoint independent of the lift channel, so the spin rate is
 selected rather than inherited.  The second term is a residual that varies
 with the lift demand.  Because both terms drive the vehicle the same way, no
 cancellation is available and no yaw equilibrium need be sought: the vehicle
