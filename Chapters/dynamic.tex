@@ -4,49 +4,74 @@
 
 \section{Overview of Water-Skipping Process}
 
-A hop is a single exchange of energy with the water surface.  The vehicle
-arrives spinning and descending; it leaves spinning more slowly and rising.
-Everything that makes the manoeuvre possible happens in the few tens of
-milliseconds in between, and this chapter is concerned with what governs that
-interval.
+This chapter models the water-contact phase of a hop.  The vehicle reaches the
+surface descending and spinning; during contact the submerged hydrofoils
+generate a vertical force, which reverses the descent, and a resisting torque,
+which reduces the spin.  The quantities to be predicted are the vertical
+velocity and the spin rate at the instant the foils leave the water.
 
-The mechanism rests on the vehicle's rotation.  Four hydrofoils are carried on
-the airframe and turn with it, so that each sweeps a circular path at a
-tangential speed $\omega r$ set by the spin rate and its radius.  That speed is
-an order of magnitude larger than the vehicle's descent speed, which means the
-foils meet the water almost edge-on, travelling far faster sideways than
-downward.  Inclined at a fixed angle $\beta$, each foil therefore acts as a
-lifting surface driven by the spin rather than by the fall.
+The configuration is that of Figure~\ref{fig:model_definitions}.  Four
+hydrofoils are fixed to the airframe and rotate with it about the vertical
+axis at yaw rate $\omega$.  A foil occupies the radial band between the root
+radius $r_{\mathrm{in}}$, set by the motor-mount circle, and the tip radius
+$r_{\mathrm{tip}}$, so an element at radius $r$ sweeps the water at tangential
+speed $\omega r$.  Each foil is a flat plate of chord $c$ held at a fixed
+inclination $\beta$ to the horizontal.  The vertical position of the vehicle
+is $z$, measured from the undisturbed surface and negative below it, and its
+vertical velocity is $\dot{z}$.
 
-What makes this worth doing is the density of the fluid.  The same foils sweep
-through air during flight, but water is roughly three orders of magnitude
-denser, so a foil that produces a negligible force in air produces a large one
-the instant it is immersed.  The vehicle thus carries surfaces that cost little
-in flight yet can arrest its descent on contact.
+At the spin rates of interest $\omega r$ exceeds $|\dot{z}|$ by an order of
+magnitude, so the resultant flow at an element is nearly horizontal and the
+angle of attack is dominated by $\beta$ rather than by the descent.  The force
+a foil generates is therefore set by the rotation rather than by the fall.
+Because water is roughly three orders of magnitude denser than air, the same
+foil sweeping at the same speed generates a force in water that is larger by a
+comparable factor, which is why surfaces that are negligible in flight are
+sufficient to arrest the descent on contact.
 
-The contact itself proceeds in two competing directions.  The foils generate a
-vertical force that decelerates and then reverses the vehicle, and
-simultaneously a resisting torque that drains the spin which produces that
-force.  A hop succeeds when the vertical impulse is large enough to return the
-vehicle to the air before the spin has decayed too far to keep it controllable
-once there.  The model developed in this chapter quantifies both effects: the
-quasi-steady hydrodynamics of a single foil section
-(Section~\ref{sec:quasi_steady}), their integration along the span
-(Section~\ref{sec:quasi_steady}), and the coupled vertical and rotational
-motion that results (Section~\ref{sec:vertical_rotational}).
+The two effects oppose one another.  The vertical force decelerates and then
+reverses the vehicle, while the resisting torque removes the spin that
+generates that force, so the force decays over the course of the contact.  A
+hop succeeds if the vertical impulse returns the vehicle to the air with enough
+spin remaining for it to be controllable.  Sections~\ref{sec:quasi_steady}
+and~\ref{sec:vertical_rotational} develop the element forces and the coupled
+vertical and rotational motion respectively, and
+Section~\ref{sec:simulation} integrates them through a contact.
+
+For reference, the contacts measured in Chapter~\ref{chapter:paperthree} last
+between $74$ and $222\;\mathrm{ms}$.  The model developed here predicts a
+considerably shorter contact, and that discrepancy is quantified in
+Section~\ref{sec:simulation}.
 
 \paragraph{Scope and assumptions.}
-The treatment is deliberately economical.  Forces are taken as quasi-steady,
-so that each instant is evaluated as if the flow were in equilibrium; the
-foils are modelled as flat plates, with the separated-flow coefficients that
-follow; only the submerged portion of a foil is assumed to generate force, and
-the water surface is treated as flat and undisturbed, so that the wetted extent
-of a foil is fixed by its geometric depth alone.  Air loads during the contact
-are neglected beside the hydrodynamic ones.  These assumptions make the problem
-tractable and expose the parameters that matter, at the cost of quantitative
-fidelity where the free surface deforms appreciably; Chapter~\ref{chapter:paperthree}
-compares the resulting predictions with flight measurements and returns to this
-point.
+Four simplifications are made.  Each is stated here with the fuller treatment it
+replaces, so that the cost of making it is visible.
+
+\begin{enumerate}[nosep]
+  \item \emph{Forces are quasi-steady.}  Each instant is evaluated as if the
+    flow were in equilibrium at the local velocity and angle of attack.  An
+    unsteady treatment would add an added-mass term proportional to the
+    acceleration of the foil and a history term depending on the wake it has
+    already shed, both of which are first-order during the entry
+    transient~\cite{truscott2014water}.
+  \item \emph{The foils are flat plates in separated flow.}  The sectional
+    coefficients are those of a thin plate at large angle of attack.  Resolving
+    the real section would require the Reynolds-dependent separation and
+    reattachment behaviour of the actual profile.
+  \item \emph{Only the submerged portion generates force.}  Air loads during
+    the contact are neglected.  A coupled treatment would carry both phases and
+    the air entrained into the cavity behind the foil.
+  \item \emph{The free surface is flat and undisturbed.}  The wetted extent of
+    a foil follows from its geometric depth alone.  The full problem tracks the
+    surface as it deforms, which determines the cavity that forms behind the
+    foil, whether that cavity ventilates to the atmosphere, and how much of the
+    foil is in contact with water at all~\cite{truscott2014water}.
+\end{enumerate}
+
+The first three are reasonable at this scale.  The fourth is not, and
+Section~\ref{sec:model_validation} shows it to be the assumption that limits
+the model: the predicted contact is far shorter and harder than the measured
+one, in the manner a deforming surface would explain.
 
 \section{Quasi-Steady Blade-Element Model}
 \label{sec:quasi_steady}
@@ -162,7 +187,11 @@ Based on the quasi-steady assumption, the differential lift and drag generated b
 \end{equation}
 where $\rho$ is the density of water, and $C_L(\alpha)$ and $C_D(\alpha)$ are the lift and drag coefficients.
 
-The differential vertical thrust and horizontal resistance force are obtained by decomposing the lift and drag forces:
+The element lift acts perpendicular to the resultant velocity $v$ and the drag
+along it, as shown in Figure~\ref{fig:model_definitions}(A).  Resolving the
+pair into vertical and horizontal components is therefore a rotation through
+the inflow angle $\gamma$, giving the differential vertical thrust and the
+differential horizontal resistance:
 
 \begin{equation}
     dT = dF_L \cos{\gamma(r)} + dF_D \sin{\gamma(r)} ,
@@ -263,35 +292,224 @@ In this formulation the hydrofoil geometry enters through two parameters: the ro
 \section{Simulation}
 \label{sec:simulation}
 
-The coupled vertical and rotational dynamics of~\eqref{eq:vertical_dynamics_function} and~\eqref{eq:rotational_dynamics_function} are integrated numerically through a single water contact. Starting from the instant the foils touch the surface, the state $(z,\dot{z},\omega)$ is advanced with a fixed-step semi-implicit Euler scheme until the foils leave the water, that is, until $z$ returns to the surface with an upward velocity. For a given entry condition (entry spin $\omega_0$ and downward entry velocity $\dot{z}_0$) and foil geometry (root radius $r_{\mathrm{in}}$, tip radius $r_{\mathrm{tip}}$ and inclination $\beta$), the simulation returns the two quantities that characterise the hop: the exit spin $\omega_{\mathrm{exit}}$ and the exit vertical velocity $\dot{z}_{\mathrm{exit}}$.
+The coupled vertical and rotational dynamics
+of~\eqref{eq:vertical_dynamics_function}
+and~\eqref{eq:rotational_dynamics_function} are integrated numerically through
+a single water contact.  The purpose is narrow: to predict the vertical
+velocity and the spin with which the vehicle leaves the water, given the
+condition in which it arrives, so that the foil inclination can be chosen and
+the vehicle checked to eject at all.  Starting from the instant the foils touch
+the surface, the state $(z,\dot{z},\omega)$ is advanced with a fixed-step
+semi-implicit Euler scheme until $z$ returns to the surface with an upward
+velocity.  The outputs are the exit spin $\omega_{\mathrm{exit}}$ and the exit
+vertical velocity $\dot{z}_{\mathrm{exit}}$.
 
+\paragraph{Parameters.}
+Table~\ref{tab:sim_params} lists the values used.  The vehicle parameters are
+those of the as-built airframe of Chapter~\ref{chapter:paperone}.  The entry
+spin $\omega_0 = 8000\;\mathrm{deg\,s^{-1}}$ is the rate measured in
+unpowered descent, when the lift rotors are off and only the tangential rotors
+drive the rotation.  The entry speeds bracket the measured range of $-1.53$ to
+$-1.85\;\mathrm{m\,s^{-1}}$ from Chapter~\ref{chapter:paperthree}.  The three
+inclinations span what can be moulded on this airframe and include
+$\beta = 30^\circ$, the only angle fabricated and flown.
 
-\paragraph{Anatomy of a hop.}
-Figure~\ref{fig:hop_time_history} overlays nine simulated contacts at the as-built tip radius of $145~\mathrm{mm}$, combining three foil inclinations ($\beta = 10^\circ, 28^\circ, 45^\circ$) with three entry speeds ($\dot{z}_0 = -1, -2, -3~\mathrm{m\,s^{-1}}$), all entering at the measured spin of $\omega_0 = 8000~\mathrm{deg\,s^{-1}}$. Solid curves are the vertical velocity $\dot{z}(t)$ on the left axis, dashed curves the spin $\omega(t)$ on the right, and filled circles mark the instant the foils leave the water.
+The moment of inertia is the one parameter that has never been measured.  It is
+taken as a thin hoop of the vehicle mass at the motor-mount circle,
+$I = m r_{\mathrm{in}}^{2}$, on the grounds that the four motors sit on that
+circle and the legs hang from them while the battery and flight board sit near
+the centre.  This is a placeholder.  Since $\dot{\omega} = -Q/I$, the predicted
+spin loss scales inversely with it, and the comparison below shows the
+prediction to be sensitive to the choice.
 
-Every case in this set ejects. The descent is arrested and reversed within $3.7$--$4.9~\mathrm{ms}$, and the vehicle leaves the surface climbing at $0.8$--$2.3~\mathrm{m\,s^{-1}}$ while retaining between $79\%$ and $99\%$ of its entry spin. The ordering is systematic: within each group of three, a faster entry produces a larger hop, and across the groups a steeper foil produces a longer contact and a heavier spin loss. The shallow $\beta = 10^\circ$ contacts give up almost no spin at all, while the steep $\beta = 45^\circ$ contact at the fastest entry surrenders a fifth of it.
+\begin{table}[t]
+    \centering
+    \caption{Parameters used in the contact simulation.}
+    \label{tab:sim_params}
+    \begin{tabular}{llr}
+        \toprule
+        Symbol & Quantity & Value \\
+        \midrule
+        $m$                     & vehicle mass              & $90\;\mathrm{g}$ \\
+        $I$                     & spin-axis inertia (placeholder) & $5.06\times10^{-4}\;\mathrm{kg\,m^{2}}$ \\
+        $\rho$                  & water density             & $1000\;\mathrm{kg\,m^{-3}}$ \\
+        $N$                     & number of hydrofoils      & $4$ \\
+        $c$                     & foil chord                & $15\;\mathrm{mm}$ \\
+        $r_{\mathrm{in}}$       & foil root radius          & $75\;\mathrm{mm}$ \\
+        $r_{\mathrm{tip}}$      & foil tip radius           & $145\;\mathrm{mm}$ \\
+        $\beta$                 & foil inclination          & $10^\circ,\ 30^\circ,\ 45^\circ$ \\
+        $\omega_0$              & entry spin                & $8000\;\mathrm{deg\,s^{-1}}$ \\
+        $\dot{z}_0$             & entry vertical velocity   & $-1,\ -2,\ -3\;\mathrm{m\,s^{-1}}$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
-Two features of the traces carry the physics. First, the reversal is not symmetric: each velocity curve turns sharply upward and then flattens as it approaches the surface, because the spin that generates the lift is itself being consumed. Second, the spin curves fall monotonically and never recover during the contact; whatever is spent is spent for good, and must be restored by the rotors during the flight that follows. The water contact is therefore not a conservative bounce. Its role is to \emph{reverse the vertical velocity and return the vehicle to the air with enough spin left to be controllable}, and the balance between those two demands is what the design study below quantifies.
+\paragraph{Predicted contacts.}
+Figure~\ref{fig:hop_time_history} overlays the nine contacts obtained by
+crossing the three inclinations with the three entry speeds.  All nine eject.
+The contact lasts $3.8$ to $8.0\;\mathrm{ms}$, the vehicle leaves climbing at
+$0.77$ to $1.69\;\mathrm{m\,s^{-1}}$, and between $35\%$ and $95\%$ of the
+entry spin remains.
+
+The ordering follows from the element forces.  A faster entry raises the inflow
+angle $\gamma$ and hence the angle of attack, so the vertical force and the
+resisting torque both increase: the hop grows and more spin is spent.  A
+steeper foil does the same through $\beta$ directly, and additionally reaches
+full wetting sooner, since $h^{*} = c\sin\beta$.  The two effects compound, so
+the heaviest loading occurs at the steep, fast corner: at $\beta = 45^\circ$
+and $-3\;\mathrm{m\,s^{-1}}$ only $35\%$ of the spin survives the contact,
+against $95\%$ at $\beta = 10^\circ$ and $-1\;\mathrm{m\,s^{-1}}$.
+
+The spin falls monotonically through every contact and never recovers, because
+the resisting torque $Q$ is of one sign whenever the foil is wetted.  The
+contact is therefore not a conservative bounce: it converts spin into vertical
+momentum, and the spin must be restored by the tangential rotors during the
+flight that follows.
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{Assets/ch2fig1_hop_trajectories.pdf}
-    \caption{Simulated time histories of nine water contacts at the as-built tip radius $r_{\mathrm{tip}} = 145~\mathrm{mm}$ and root radius $r_{\mathrm{in}} = 75~\mathrm{mm}$, combining three inclinations ($\beta = 10^\circ, 28^\circ, 45^\circ$) with three entry speeds ($\dot{z}_0 = -1, -2, -3~\mathrm{m\,s^{-1}}$), all entering at $\omega_0 = 8000~\mathrm{deg\,s^{-1}}$. Solid curves: vertical velocity $\dot{z}$ (left axis). Dashed curves: spin $\omega$ (right axis). Filled circles mark water exit. All nine contacts eject; steeper inclination and faster entry both lengthen the contact and increase the spin surrendered to the water.}
+    \caption{Simulated time histories of nine water contacts at the as-built root and tip radii, $r_{\mathrm{in}} = 75~\mathrm{mm}$ and $r_{\mathrm{tip}} = 145~\mathrm{mm}$, crossing three inclinations ($\beta = 10^\circ, 30^\circ, 45^\circ$; $30^\circ$ is the fabricated foil) with three entry speeds ($\dot{z}_0 = -1, -2, -3~\mathrm{m\,s^{-1}}$), all entering at $\omega_0 = 8000~\mathrm{deg\,s^{-1}}$. Top: penetration depth $z$ below the undisturbed surface, which sets the wetted chord $c_{\mathrm{sub}}$ and therefore the force. Middle: vertical velocity $\dot{z}$. Bottom: spin $\omega$. Filled circles mark water exit. All nine contacts eject; steeper inclination and faster entry both deepen and lengthen the contact and increase the spin surrendered to the water.}
     \label{fig:hop_time_history}
 \end{figure}
 
-\paragraph{Design space and the hop--spin trade-off.}
-Evaluating the model across the space spanned by the inclination $\beta$, the tip radius $r_{\mathrm{tip}}$, and the entry velocity $\dot{z}_0$ shows how the two hop metrics respond to the design. Figure~\ref{fig:design_space_maps} plots every simulated design as a point in this space, coloured by the exit vertical velocity $\dot{z}_{\mathrm{exit}}$ (left, the hop) and by the exit spin $\omega_{\mathrm{exit}}$ (right, the spin retained for the flight that follows). Across the space the hop ranges from $0.36$ to $3.17~\mathrm{m\,s^{-1}}$ and the retained spin from $4159$ to $7980~\mathrm{deg\,s^{-1}}$, between $52\%$ and essentially all of the entry spin.
+\subsection{Comparison with the measured contacts}
+\label{sec:model_validation}
 
-The two panels are organised by different variables, and the contrast is the substance of the figure. The hop follows the entry velocity above all: the left panel is layered almost entirely along the $\dot{z}_0$ axis, and holding the geometry fixed while varying the entry speed alone moves $\dot{z}_{\mathrm{exit}}$ by $85\%$ of its range. The inclination $\beta$ is the second lever, worth a further $37\%$; a steeper foil presents more of its area to the flow and turns more of the sweep into vertical impulse. The tip radius is nearly inert by comparison, changing the hop by only about $4\%$ across a two-fold change in radius, because at the sweep speeds considered here the foils already generate far more force than is needed to reverse the descent, and the contact ends before the extra radius can express itself.
+Table~\ref{tab:model_vs_measured} places the model at the as-built inclination
+and the measured entry speed beside the eight contacts reported in
+Chapter~\ref{chapter:paperthree}.  The three predictions do not fail together,
+and the pattern of agreement is informative.
 
-The retained spin behaves in the opposite sense. It is largest, close to the full entry value, where the foils do least work: shallow inclination and gentle entry. It falls steadily as either the inclination steepens or the entry speed rises, reaching $52\%$ at the most heavily loaded corner of the space. The two objectives therefore oppose one another: within this model the largest hop, $3.17~\mathrm{m\,s^{-1}}$, occurs at $\beta = 42^{\circ}$ and the fastest entry considered, and costs a quarter of the spin, while the design that retains all of its spin delivers a hop of only $0.36~\mathrm{m\,s^{-1}}$.
-
-This is the compromise that sizes the vehicle: take as much hop as can be had while leaving enough spin for the vehicle to remain controllable on exit. It also indicates where design effort is repaid. The inclination and the conditions of entry govern the outcome, whereas the radial extent of the foil, once large enough, does not, so the foil may be sized by structural and packaging considerations without penalising the hop. The geometry selected on this basis is described in Chapter~\ref{chapter:paperone}.
-
-\begin{figure}[t]
+\begin{table}[t]
     \centering
-    \includegraphics[width=\linewidth]{Assets/ch2fig2_design_space.pdf}
-    \caption{Hop performance over the design space $(\beta,\ r_{\mathrm{tip}},\ \dot{z}_0)$, evaluated at the as-built root radius $r_{\mathrm{in}} = 75~\mathrm{mm}$ and entry spin $\omega_0 = 8000~\mathrm{deg\,s^{-1}}$. Each point lies on an iso-value surface of the response, coloured by the exit vertical velocity $\dot{z}_{\mathrm{exit}}$ (left, the hop) and by the exit spin $\omega_{\mathrm{exit}}$ (right, the retained spin). The two responses are organised by different variables: the hop is layered along the entry velocity and, secondarily, the inclination, while the retained spin falls wherever the foils are most heavily loaded. Both are nearly independent of the tip radius over the range shown.}
-    \label{fig:design_space_maps}
-\end{figure}
+    \caption{The model at $\beta = 30^\circ$ and $\dot{z}_0 = -1.7\;\mathrm{m\,s^{-1}}$,
+    against the eight measured contacts of Chapter~\ref{chapter:paperthree}.}
+    \label{tab:model_vs_measured}
+    \begin{tabular}{lrrl}
+        \toprule
+        & Predicted & Measured & \\
+        \midrule
+        Exit velocity          & $+1.20\;\mathrm{m\,s^{-1}}$ & $+1.01\;\mathrm{m\,s^{-1}}$ & agrees to $7\%$ \\
+        Spin retained          & $75\%$                      & $\approx 40\%$              & high by $1.9\times$ \\
+        Contact duration       & $4.6\;\mathrm{ms}$          & $118\;\mathrm{ms}$          & low by $26\times$ \\
+        Mean vertical acceleration & $64\,g$                 & $2.4\,g$                    & high by $27\times$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+The exit velocity, which is the quantity the design depends on, is predicted to
+within $7\%$.  The total impulse is therefore close to right: the model gives a
+velocity reversal of $2.90\;\mathrm{m\,s^{-1}}$ against a measured
+$2.71\;\mathrm{m\,s^{-1}}$.  What the model distributes incorrectly is the
+interval over which that impulse is delivered.  It predicts a brief, violent
+contact of a few milliseconds at some $64\,g$; the measured contact delivers
+almost the same momentum over more than a hundred milliseconds at a few $g$,
+with the peak accelerations of
+Chapter~\ref{chapter:paperthree} reaching only $4.9$ to $5.7\,g$.
+
+The flat-surface assumption accounts for this.  The model wets the foil to its
+geometric depth in an undisturbed surface, so the foil meets undisplaced water
+at full density from the first instant and the force rises immediately to its
+maximum.  A real surface yields: the water is pushed down and outward ahead of
+the foil, the foil follows the depression it creates, and it remains engaged
+far longer at a much lower load.  Integrated over the contact the two give
+comparable impulses, which is why the exit velocity survives while the duration
+does not.
+
+A related symptom is visible in the predicted depths of
+Figure~\ref{fig:hop_time_history}.  No case penetrates beyond about
+$4.5\;\mathrm{mm}$, whereas full wetting of the as-built foil requires
+$h^{*} = c\sin\beta = 7.5\;\mathrm{mm}$.  The chord cap in
+$c_{\mathrm{sub}} = \min(z/\sin\beta,\,c)$ is therefore never reached at
+$\beta = 30^{\circ}$, and the foil is ejected while still only partly wetted.
+A contact that lasted as long as the measured one would drive the foil far
+deeper, which is a further indication that the surface is not behaving as the
+model assumes.
+
+The over-predicted spin retention has the same origin, compounded by the
+unmeasured inertia.  A contact that is too short removes too little spin,
+and the hoop placeholder for $I$ is an upper bound on a rim-weighted vehicle
+whose battery and board sit near the axis; both errors push the retained spin
+upward.
+
+\subsection{Energy accounting}
+\label{sec:energy_accounting}
+
+The contact converts rotational energy into height.  Its efficiency is defined
+here as
+%
+\begin{equation}
+    \eta = \frac{\tfrac{1}{2} m \dot{z}_{\mathrm{exit}}^{2}}
+                {\tfrac{1}{2} I \left(\omega_0^{2} - \omega_{\mathrm{exit}}^{2}\right)},
+    \label{eq:hop_efficiency}
+\end{equation}
+%
+the vertical kinetic energy carried away from the surface divided by the
+rotational energy given up to produce it.
+
+One part of this ledger does not depend on the unmeasured inertia.  The
+fraction of rotational energy consumed is
+$1 - (\omega_{\mathrm{exit}}/\omega_0)^{2}$, a ratio in which $I$ cancels.
+Across the nine simulated contacts it runs from $9\%$ at the shallowest and
+gentlest entry to $88\%$ at the steepest and fastest.  At the as-built
+$\beta = 30^{\circ}$ and the measured entry speed the model gives $44\%$, and
+the measured spin retention of roughly $40\%$ implies $84\%$.  A single contact
+therefore consumes most of the stored rotational energy, and the tangential
+rotors must restore it before the next hop.
+
+The efficiency itself does depend on $I$, and scales as $1/I$.  With the hoop
+placeholder of Table~\ref{tab:sim_params} the model gives $\eta \approx 3\%$ at
+the as-built condition, and the measured spin loss gives $\eta \approx 1\%$.
+These figures should be read as an order of magnitude rather than as
+measurements, but their smallness is not an artefact of the placeholder: the
+rotational energy stored at $8000\;\mathrm{deg\,s^{-1}}$ exceeds the vertical
+kinetic energy of a hop by more than an order of magnitude on any plausible
+value of $I$.
+
+The efficiency also separates the three inclinations in a way the exit velocity
+alone does not.  At every entry speed $\beta = 45^{\circ}$ is dominated: it
+produces both a smaller hop and a lower efficiency than $\beta = 30^{\circ}$,
+because the steeper plate raises drag faster than lift and spends the extra
+torque without returning extra impulse.  The comparison between $10^{\circ}$
+and $30^{\circ}$ is a genuine trade rather than a domination.  At an entry of
+$-2\;\mathrm{m\,s^{-1}}$ the shallower foil delivers
+$1.25\;\mathrm{m\,s^{-1}}$ against $1.36\;\mathrm{m\,s^{-1}}$, some $92\%$ of
+the hop, for $\eta = 8.6\%$ against $3.4\%$, roughly two and a half times the
+efficiency.  A shallow foil is therefore the better converter and a moderate
+one the better jumper, and the choice depends on whether height per contact or
+energy per contact is the binding constraint.  This thesis takes height, since
+the vehicle must clear the surface reliably and the rotors restore the spin
+between hops in any case.
+
+These efficiencies inherit the error identified in
+Section~\ref{sec:model_validation}: $\eta$ depends entirely on the predicted
+spin loss, which the model under-states.  The ordering is nonetheless robust,
+since it follows from the angle of attack alone, a shallower foil generating
+less resisting torque per unit of vertical force.  The magnitudes should be
+treated as indicative.
+
+The consequence is worth stating plainly.  The hop is not an efficient energy
+converter, and nothing in this thesis claims that hopping is cheaper than
+hovering or than a conventional take-off from the surface.  What the contact
+provides is a means of leaving the water at all without accelerating from rest
+against surface adhesion, using a rotation the vehicle must sustain in any case
+to remain controllable.  The spin is better understood as a buffer that the
+contact draws on and the rotors refill than as a store from which useful work
+is efficiently extracted.
+
+\paragraph{What the model is for.}
+On this evidence the model is a sizing tool and not a predictive one.  It
+answers the question the design poses, whether a given foil at a given spin
+will eject the vehicle and at roughly what speed.  It should not be used to
+predict how long the foils stay wetted, how deep they go, or how much spin
+survives.  Only one inclination was fabricated and flown, so the ordering the
+model produces across $\beta$ is untested against experiment and is reported
+as a prediction rather than a result.  The inclination
+$\beta = 30^\circ$ was selected on the exit velocity it delivers at the
+measured entry conditions, with the predicted spin loss used only as a
+qualitative check that the vehicle would not be left uncontrollable on exit,
+not as a quantitative criterion; the resulting geometry is described in
+Chapter~\ref{chapter:paperone}.  Closing the gap on the contact
+duration requires a free-surface treatment, which is identified as future work
+in Chapter~\ref{chapter:conclusion}.

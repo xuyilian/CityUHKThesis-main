@@ -60,21 +60,28 @@ encountered.
 
 \section{Limitations}
 
-\paragraph{The model over-predicts the contact.}
+\paragraph{The model predicts the impulse but not the contact.}
 The blade-element treatment of Chapter~\ref{dynamic} assumes that the foils
 are immersed to their geometric depth in an undisturbed, flat surface.  At the
-sweep speeds this vehicle reaches, that assumption does not hold: the measured
-contact is markedly longer and gentler than predicted, which is consistent
-with the free surface deforming away from the foils and with ventilation of
-the upper surface.  The model remains useful for the trends it exposes and for
-sizing, but its absolute predictions should not be relied upon at these
-speeds.
+sweep speeds this vehicle reaches, that assumption does not hold.  The failure
+is specific rather than general: the predicted exit velocity is within $7\%$
+of the measured value, so the total impulse is close to correct, but it is
+predicted to arrive over $4.6\;\mathrm{ms}$ at some $64\,g$ where the
+measurement shows more than a hundred milliseconds at a few $g$.  A surface
+that deforms away from the foil, rather than standing flat while the foil
+cuts through it, would keep the foil engaged for far longer at a much lower
+load and account for the difference.  The model may therefore be used to size
+a foil, which depends on the impulse, but not to predict how long the foils
+stay wetted, how deep they penetrate, or how much spin survives.
 
 \paragraph{Inertia was never measured.}
-The moment of inertia about the spin axis is estimated from a uniform-disk
-approximation rather than measured.  Predicted spin loss through the contact
-depends on it directly, and should be treated as indicative until it is
-determined experimentally.
+The moment of inertia about the spin axis is estimated rather than measured,
+as a thin hoop of the vehicle mass at the motor-mount circle.  Predicted spin
+loss through the contact depends on it directly, and the conversion efficiency
+of Section~\ref{sec:energy_accounting} scales as its inverse, so both should
+be treated as indicative until the inertia is determined experimentally.  The
+fraction of rotational energy consumed by a contact is independent of it and
+is the more reliable of the two figures.
 
 \paragraph{Instrumentation limited the length of a sequence.}
 The number of consecutive hops that could be recorded was limited by the
