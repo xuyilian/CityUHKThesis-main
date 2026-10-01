@@ -438,19 +438,21 @@ result a single hop cannot establish.
 % =====================================================================
 \begin{figure}[t]
     \centering
-    % TODO(annotate): first-pass composite, 9 exposures lighten-blended from
-    % C0284 frames 356-388 (25 fps), i.e. every 4th frame = 160 ms apart,
-    % contact at frame 374. The timings are now stated in the caption; adding
-    % them as labels beside each exposure would be better still. Optional:
-    % suppress the scattered spray.
-    \includegraphics[width=\linewidth]{Assets/ch5fig5_composite.jpg}
+    % Annotated by code/Water-skip-controller/fig_composite_annotate.py.
+    % Exposure rows are measured from the composite itself (saturation profile
+    % down the vehicle's column); the unannotated original is kept alongside
+    % as ch5fig5_composite.jpg.
+    \includegraphics[width=\linewidth]{Assets/ch5fig5_composite_annotated.jpg}
     \caption{Composite image of one hop from the sequence of
     Figure~\ref{fig:hop_two}, assembled from successive frames of the video
     record of the same flight.  Nine exposures are shown at a uniform spacing
-    of $160\;\mathrm{ms}$, spanning $1.28\;\mathrm{s}$ in total; water contact
-    occurs between the fifth and sixth, which fall $80\;\mathrm{ms}$ before and
-    after it.  The vehicle descends with its lift rotors commanded off,
-    contacts the surface, and is returned to the air by the hydrofoils.  The
+    of $160\;\mathrm{ms}$, spanning $1.28\;\mathrm{s}$ in total, and times are
+    given relative to water contact.  The vehicle descends with its lift rotors
+    commanded off, contacts the surface, and is returned to the air by the
+    hydrofoils.  Exposures coincide where the vehicle moves least between
+    frames, before release and again near the top of the climb-out, so the
+    labels mark groups rather than nine separate positions; the two exposures
+    either side of contact fall within the spray and are bracketed.  The
     contact itself lasts far less than the interval between exposures, so no
     single frame captures it: the spray visible at the surface is its
     aftermath.}
