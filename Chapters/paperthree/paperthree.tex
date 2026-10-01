@@ -35,11 +35,11 @@ being surveyed in advance.
 
 \paragraph{Water.}
 Hops are performed over a container of still water, tracked as the second
-rigid body above.
-% TODO(setup): container dimensions and water depth. Asked for explicitly in
-% the first-round review, so a real number is needed here. Depth matters in
-% that it must exceed the foil penetration, letting the reader rule out a
-% bottom effect.
+rigid body above.  The container is square in plan, $0.5\;\mathrm{m}$ on a
+side, and is filled to a depth of $70\;\mathrm{mm}$.  The depth was held
+constant across every flight reported here and was not varied, so any
+influence of the finite depth on the contact is not characterised; the model
+of Chapter~\ref{dynamic} treats the water as unbounded below.
 The surface is left undisturbed before each attempt, so that the entry
 conditions match the flat-surface assumption of the model in
 Chapter~\ref{dynamic}.  No attempt was made to control or characterise the
@@ -118,6 +118,14 @@ a full revolution in the horizontal plane at the instantaneous yaw frequency
 $f_0$.  From the inertial frame, this manifests as a sinusoidal oscillation in
 $R_{13}$ and $R_{23}$ at frequency $f_0$, superimposed on the true
 quasi-static tilt components.
+
+The onboard inertial measurement unit takes no part in this.  The rate gyro
+was not logged, and the one onboard inertial channel that was recorded, the
+vertical accelerometer, is unusable at these spin rates: compared against the
+vertical acceleration differentiated from the motion-capture position, it
+disagrees both in magnitude and in sign over a whole flight.  The attitude
+path is therefore driven by motion capture alone, and the artifact removed
+below is a property of the marker geometry rather than of an inertial sensor.
 
 \paragraph{Signal model.}
 The measured attitude signals are modeled as
@@ -264,12 +272,17 @@ controller is re-engaged and returns the vehicle to the commanded height,
 whereupon the cycle repeats.
 
 \paragraph{Why the descent is left unpowered.}
-Cutting the lift entirely is a stronger test than assisting the ejection, and
-it isolates the contribution of the hydrofoils: whatever upward velocity the
-vehicle leaves the water with has been supplied by the water, not by the
-rotors.  A facility was provided in the flight software to apply thrust during
-the descent, but it was set to zero for every flight reported here and proved
-unnecessary.
+Cutting the lift entirely is a stronger test than assisting the ejection.  The
+whole of the descent, and the first part of the reversal, happen with both
+lift rotors commanded to zero, so the vehicle arrives at the surface and
+begins to be thrown back from it without any contribution from the rotors.
+Control is restored before the foils leave the water, about $42\;\mathrm{ms}$
+into a $75\;\mathrm{ms}$ contact on the hop of
+Section~\ref{sec:single_hop}, and the thrust that returns is well below what
+is needed to support the vehicle, so it cannot account for the ejection
+although it does assist the climb that follows.  A facility was provided in
+the flight software to apply thrust during the descent itself, but it was set
+to zero for every flight reported here and proved unnecessary.
 
 \paragraph{Detecting the hop.}
 Re-engaging the controller at the right instant is the practical difficulty in
@@ -311,6 +324,7 @@ it exists so that a tracking dropout costs one hop rather than the flight.
 
 
 \subsection{Anatomy of a single hop}
+\label{sec:single_hop}
 
 Figure~\ref{fig:hop_single} shows one hop in isolation.  From a hover at
 $0.95\;\mathrm{m}$ the lift rotors are commanded to zero thrust and the
@@ -364,7 +378,17 @@ the clearest opening for further work.
     which it is off.  It returns partway through the contact, after the
     descent has already been arrested, and reaches at most $0.64$ of the
     hover command before the foils leave the water: enough to assist the
-    climb that follows, but well short of supporting the vehicle.}
+    climb that follows, but well short of supporting the vehicle.
+    \textbf{(D)} Spin rate magnitude. The foils carry roughly
+    $7800^{\circ}\,\mathrm{s^{-1}}$ into the water and leave it at about
+    $3500^{\circ}\,\mathrm{s^{-1}}$, so a little under half the spin
+    survives the contact: this is the rotation spent driving the hop. Two
+    artefacts of the measurement are removed. The mocap yaw unwrapping leaves
+    isolated single-sample spikes, which a five-point running median
+    suppresses without affecting the step at contact; and when the splash
+    obscures the markers the logged rate falls to exactly zero, so those
+    samples are blanked and appear as a gap rather than as a vehicle that has
+    stopped spinning.}
     \label{fig:hop_single}
 \end{figure}
 

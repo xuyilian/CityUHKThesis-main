@@ -654,3 +654,38 @@ the water, while the tangential pair continues to drive the rotation that the
 hydrofoils need at contact.  Under the coupled yaw--thrust arrangement of a
 conventional spinning multirotor, cutting the lift would also remove the yaw
 drive and the spin would decay exactly when it is needed most.
+\paragraph{Relation to prior work.}
+It is worth being explicit about which parts of this chapter are inherited.
+The fast-spin machinery is: the gyroscopic reduced attitude dynamics
+of~\eqref{eq:reduced_attitude}, the inertial angular-momentum projection that
+produces them, the non-cascaded fourth-order error formulation
+of~\eqref{eq:error_poly}, and the idea of realising an inertial torque with a
+body-fixed actuation axis by modulating it against the yaw angle.  All of
+these are taken from the treatment of fast-rotating
+multirotors~\cite{bai2020splitflyer,bai2022splitflyerair,mueller2016relaxed},
+and they require only that $\omega_z$ be large and approximately constant.
+They do not depend on why the vehicle spins.
+
+What differs is the actuation.  In the vehicles those methods were developed
+for, the rotors are interchangeable and the spin is a consequence of the
+configuration.  Here two rotors are mounted tangentially and two vertically,
+which changes three things.  The spin rate becomes a commanded input rather
+than an equilibrium, so it can be chosen to suit the hop.  The lift and the
+tilting torque are carried by two rotors rather than four, so the allocation
+of~\eqref{eq:input_map} is a two-by-two map and the attainable torque
+is bounded by the collective thrust.  And the spin is sustained when the lift
+command is removed, which is what the water-contact manoeuvre depends on.
+
+The implementation also departs from a stock flight stack in two respects: the
+setpoint is sent as a compressed nine-byte packet carrying only the two
+horizontal commands, the yaw angle and the collective thrust, and the
+transmission is decoupled from the control computation so that neither waits
+on the other.  No before-and-after latency measurements were recorded, so no
+claim is made here that these changes are what permitted the spin rates flown;
+they are reported as implementation detail rather than as a result.
+
+The contribution of this thesis is not the control law.  It is the locomotion
+mode of Chapter~\ref{dynamic} and the airframe of
+Chapter~\ref{chapter:paperone} that makes it possible; the control described
+here is what was required to fly that airframe, and it rests substantially on
+the work cited above.
