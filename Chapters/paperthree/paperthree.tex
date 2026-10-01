@@ -276,11 +276,10 @@ Cutting the lift entirely is a stronger test than assisting the ejection.  The
 whole of the descent, and the first part of the reversal, happen with both
 lift rotors commanded to zero, so the vehicle arrives at the surface and
 begins to be thrown back from it without any contribution from the rotors.
-Control is restored before the foils leave the water, about $42\;\mathrm{ms}$
-into a $75\;\mathrm{ms}$ contact on the hop of
-Section~\ref{sec:single_hop}, and the thrust that returns is well below what
-is needed to support the vehicle, so it cannot account for the ejection
-although it does assist the climb that follows.  A facility was provided in
+Control is restored as the foils leave the water, not during the contact: on
+the hop of Section~\ref{sec:single_hop} the lift command returns within one
+sample of the instant the hydrofoils cease to accelerate the vehicle upward.
+The whole of the reversal is therefore the work of the water.  A facility was provided in
 the flight software to apply thrust during the descent itself, but it was set
 to zero for every flight reported here and proved unnecessary.
 
@@ -335,14 +334,15 @@ and leaves the surface climbing at $+0.92\;\mathrm{m\,s^{-1}}$, by which
 time it has recovered to $0.60\;\mathrm{m}$.  The peak upward acceleration
 during the contact is $4.9\,g$.
 
-The descent is flown with the lift rotors commanded off, and it is arrested
-with them still off: the vehicle's downward velocity is brought to zero
-entirely by the hydrofoils.  Control is restored partway through the contact,
-once the vehicle has already stopped descending, and the lift command then
-rises to a peak of $0.64$ times the hover value before the foils leave the
-water.  Since that is well short of the thrust needed to support the vehicle,
-the rotors cannot account for the ejection, though they do contribute to the
-climb that follows.
+The descent is flown with the lift rotors commanded off, and so is the
+contact: the lift command returns within one sample of the instant at which
+the hydrofoils cease to accelerate the vehicle upward.  The reversal is
+therefore the work of the water alone, and the rotors contribute only to the
+climb that follows.  The contact boundaries are read from the raw
+motion-capture position rather than from the twice-filtered velocity channel
+logged in flight, which lags it by roughly two samples; the duration is the
+same either way, but only the unlagged boundaries can be compared against the
+timing of the lift command.
 Chapter~\ref{dynamic} predicts, for these entry conditions, an exit velocity
 of $+1.2\;\mathrm{m\,s^{-1}}$ and a contact lasting about
 $4.6\;\mathrm{ms}$.  The predicted exit velocity is within $7\%$ of the
@@ -375,10 +375,10 @@ the clearest opening for further work.
     speed.  \textbf{(C)}~Commanded lift thrust, as a percentage of
     full scale, drawn exactly as logged.  The command is cut from its hover
     value to zero before the descent, and the bar marks the interval over
-    which it is off.  It returns partway through the contact, after the
-    descent has already been arrested, and reaches at most $0.64$ of the
-    hover command before the foils leave the water: enough to assist the
-    climb that follows, but well short of supporting the vehicle.
+    which it is off.  It returns as the foils leave the water, within one
+    sample of the instant the upward hydrodynamic force ceases, so the whole
+    of the reversal is unpowered and the rotors contribute only to the climb
+    that follows.
     \textbf{(D)} Spin rate magnitude. The foils carry roughly
     $7800^{\circ}\,\mathrm{s^{-1}}$ into the water and leave it at about
     $3500^{\circ}\,\mathrm{s^{-1}}$, so a little under half the spin
