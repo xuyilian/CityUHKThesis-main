@@ -2,9 +2,15 @@
 
 Annotations from the marked-up PDF, transcribed by location. The PDF was a
 build predating the Chapter 5 results and the citation work, so some items
-were already resolved when the review arrived; those are marked DONE.
+were already resolved when the review arrived.
 
-Status key: **DONE** fixed · **OPEN** outstanding · **DECIDE** needs a judgement call
+> **ALL 63 ANNOTATIONS ARE CLOSED as of 2026-10-01.** The OPEN/DECIDE labels
+> in the tables below are the state *at the time of transcription* and are
+> kept as a record of what the review asked for. See "How each was resolved"
+> at the end for what was actually done. Nothing in this file is outstanding.
+
+Status key (as transcribed): **DONE** fixed · **OPEN** outstanding ·
+**DECIDE** needs a judgement call
 
 ---
 
@@ -103,31 +109,49 @@ speculation, for which no measurements were kept.
 
 ---
 
-## The five substantive problems
+## The five substantive problems, and how each was resolved
 
-Everything above clusters into five. In rough priority order:
+1. **Chapter 2's writing style.** §2.1 rewritten in a technical register:
+   opens by stating what is modelled, defines every symbol on first use
+   against Fig 2.1, no rhetorical paragraph openers. §2.5 rebuilt. The chapter
+   got shorter before it got longer again.
 
-1. **Chapter 2's writing style.** Said four different ways. Sections 2.1 and 2.5
-   are written as an essay and need rewriting to be direct. Largest single item.
+2. **Related work has no *why*.** Each paragraph of §1.3 now carries the
+   physics: the opposing demands the two media make of one airframe; adhesion
+   scaling on contact perimeter against thrust scaling on disk area, which is
+   why departure needs stored energy released impulsively; the inertial origin
+   of the skipping reaction and the two distinct roles of spin; and for
+   spinning multirotors what giving up heading buys, why a rotating actuation
+   axis and gyroscopic precession make control hard, and why the reduced
+   attitude description follows. No new references were needed.
 
-2. **Related work has no *why*.** Four annotations ask the same question: why is
-   leaving water hard, why impulsive jumping, why do people study spinning
-   multirotors, why reduced attitude dynamics. The section lists what exists
-   without explaining the physics of the difficulty.
+3. **Section 2.5 has no stated purpose.** The design-space study was CUT. §2.5
+   now opens with its purpose, carries a parameter table so it is
+   reproducible, and ends with a validation against the eight measured
+   contacts plus an energy accounting section. The model is stated to be a
+   sizing tool and not a predictive one.
 
-3. **Section 2.5 has no stated purpose.** No design requirement, no performance
-   metric, and no energy analysis, so the design study has nothing to be
-   evaluated against. His own summary is the sharpest statement of the problem.
+4. **The spin-rate claim.** Deleted rather than defended, as recommended. The
+   invented 20*pi ceiling and the latency speculation are gone from §3.1,
+   which now states the flown rate as a fact and says the reason is
+   unresolved. Checked first whether the obvious explanation held (that the
+   onboard projection runs faster than the 100 Hz outer loop); it does not,
+   because the yaw angle reaches the firmware only at the packet rate.
 
-4. **The spin-rate claim.** Recommendation above: delete rather than defend.
+5. **Missing figures.** Four added: Fig 1.1 hop cycle, Fig 4.1 non-revolving
+   frame, Fig 2.2 rebuilt as three panels, Fig 5.2 given a fourth panel for
+   spin rate. Fig 5.3 gained time stamps. The c_sub and force-decomposition
+   requests were met by pointing at Fig 2.1, which already showed both.
 
-5. **Missing figures.** Vehicle schematic (1.2), mechanism (2.1), chord wetting
-   (2.12), force decomposition (2.17), coordinate frames (4.1).
+## What the review got right that the thesis had wrong
 
-## Numbers he flagged that have since changed
-
-He highlighted `-1.55 m/s` and `106 ms` and noted the contact was far longer than
-the model predicts. Both were superseded by the corrected contact detection:
-entry is now taken at the knee of the velocity rise rather than the velocity
-minimum, giving **-1.53 m/s and 75 ms** for the same hop. Worth telling him, since
-his instinct that 106 ms was implausible was right.
+- **106 ms contact.** His "a lot longer than your model prediction" was right
+  to be suspicious. Corrected detection gives 75 ms and -1.53 m/s.
+- **"omega_z can be selected too".** Correct, and the paragraph claiming a
+  "substantive departure" was wrong. Selectability is not the distinction;
+  decoupling the spin from the lift channel is.
+- **"not sure it is justified"** on the unpowered descent. Here he was
+  *misled by the thesis's own error*: the text had been softened to say the
+  rotors returned during the contact, which came from comparing a lagged
+  velocity signal against an unlagged command. Lag-free, the original claim
+  stands and the whole contact is unpowered.
